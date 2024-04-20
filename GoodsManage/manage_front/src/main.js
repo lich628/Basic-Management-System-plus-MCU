@@ -20,11 +20,11 @@ import '@/permission' // permission control 权限控制
  * you want to use MockJs for mock api
  * you can execute: mockXHR()
  *
- * Currently MockJs will be used in the production environment,
+ * Currently, MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
 
-//以下注释只为去除mock
+// 以下注释只为去除mock
 // if (process.env.NODE_ENV === 'production') {
 //   const { mockXHR } = require('../mock')
 //   mockXHR()

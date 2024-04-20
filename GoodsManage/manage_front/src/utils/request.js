@@ -3,7 +3,7 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-// create an axios instance
+// 创建axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
@@ -25,7 +25,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log("request error-->")
+    console.log('request error-->')
     console.log(error) // for debug
     return Promise.reject(error)
   }
@@ -48,7 +48,7 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (0 || res.code !== 20000) {
-      //10000：警告信息，但依旧被前端拦截
+      // 10000：警告信息，但依旧被前端拦截
       if (res.code === 10000) {
         Message({
           message: res.message,
@@ -56,7 +56,7 @@ service.interceptors.response.use(
           duration: 5 * 1000
         })
       } else {
-        console.log(res);
+        console.log(res)
         Message({
           message: res.message,
           type: 'error',

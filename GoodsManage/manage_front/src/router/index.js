@@ -95,7 +95,7 @@ export const constantRoutes = [
       },
       {
         path: 'newRecord',
-        name: 'NewwRecord',
+        name: 'NewRecord',
         component: () => import('@/views/form/newRecord/index'),
         meta: { title: '新增打卡', icon: 'form' }
       }

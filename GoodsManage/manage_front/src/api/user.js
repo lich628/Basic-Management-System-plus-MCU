@@ -26,7 +26,7 @@ export function logout() {
 export function update(data) {
   return request({
     url: '/user/update',
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { 'Content-Type': 'multipart/form-data' },
     method: 'put',
     data
   })

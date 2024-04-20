@@ -17,5 +17,5 @@ export function isExternal(path) {
 export function validUsername(str) {
   // const valid_map = ['Qing', 'editor', 'admin']
   // return valid_map.indexOf(str.trim()) >= 0
-  return str.trim().length;
+  return str.trim().length
 }

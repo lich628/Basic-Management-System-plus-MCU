@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function getList() {
   return request({
     url: '/record/list',
-    method: 'get',
+    method: 'get'
   })
 }
 
