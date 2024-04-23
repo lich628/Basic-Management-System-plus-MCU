@@ -1,6 +1,5 @@
 package com.manage.service;
-
-import com.manage.bean.Category;
+import com.manage.entity.Category;
 import com.manage.mapper.CategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,9 +37,7 @@ public class CategoryService {
 	public String storeFile(MultipartFile file) {
 		System.out.println("CategoryService->storeFile--> " + file + " 开始运行存储程序...");
 		String fileName = file.getOriginalFilename();
-		Format dateFormat = new SimpleDateFormat("yyyy-MM-dd-");
-		String format = dateFormat.format(new Date());
-		String realPath = System.getProperty("user.dir") + "/src/main/resources/static/img";
+		String realPath = System.getProperty("user.dir") + "/GoodsManage/springboot_manage/src/main/resources/static/img";
 		System.out.println("CategoryService->storeFile--> " + realPath + " 此位置将被用作存储");
 		File folder = new File(realPath);
 		if (!folder.exists()) {
@@ -50,11 +47,11 @@ public class CategoryService {
 		}
 		String newName;
 		if (fileName.endsWith(".png") || fileName.endsWith(".PNG")) {
-			newName = format + UUID.randomUUID().toString() + ".png";
+			newName = fileName+".png";
 		} else if (fileName.endsWith(".jpg") || fileName.endsWith(".JPG")) {
-			newName = format + UUID.randomUUID().toString() + ".jpg";
+			newName = fileName+".jpg";
 		} else if (fileName.endsWith(".jpeg") || fileName.endsWith(".JPEG")) {
-			newName = format + UUID.randomUUID().toString() + ".jpeg";
+			newName = fileName+".jpeg";
 		} else {
 			System.out.println("CategoryService->storeFile--> 文件类型不受支持！程序停止");
 			return null;

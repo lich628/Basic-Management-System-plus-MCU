@@ -1,2 +1,9 @@
 .idea/
 GoodsManage/manage_front/node_modules/
+*.log       # 忽略所有以.log结尾的文件
+.idea/      # 忽略.idea文件夹和其下的所有内容
+*.tmp       # 忽略所有以.tmp结尾的文件
+*.swp       # 忽略所有以.swp结尾的文件
+*.bak       # 忽略所有以.bak结尾的文件
+
+

@@ -1,6 +1,6 @@
 package com.manage.service;
 
-import com.manage.bean.Record;
+import com.manage.entity.Record;
 import com.manage.mapper.RecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

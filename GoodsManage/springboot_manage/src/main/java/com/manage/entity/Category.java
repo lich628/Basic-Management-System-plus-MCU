@@ -1,4 +1,4 @@
-package com.manage.bean;
+package com.manage.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import org.springframework.web.multipart.MultipartFile;

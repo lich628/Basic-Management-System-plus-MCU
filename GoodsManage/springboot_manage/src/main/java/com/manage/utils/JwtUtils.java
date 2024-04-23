@@ -7,8 +7,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 
 public class JwtUtils {
-	//7天过期
-	private static long expire = 604800;
+	//1天过期
+	private static long expire = 86400;
 	//32位秘钥
 	private static String secret = "abcdfghiabcdfghiabcdfghiabcdfghi";//
 

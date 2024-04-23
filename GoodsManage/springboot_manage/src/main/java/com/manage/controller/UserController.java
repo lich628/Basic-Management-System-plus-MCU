@@ -1,6 +1,6 @@
 package com.manage.controller;
 
-import com.manage.bean.User;
+import com.manage.entity.User;
 import com.manage.service.UserService;
 import com.manage.utils.JwtUtils;
 import com.manage.utils.Result;

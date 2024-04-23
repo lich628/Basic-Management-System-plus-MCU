@@ -1,6 +1,6 @@
 package com.manage.controller;
 
-import com.manage.bean.Category;
+import com.manage.entity.Category;
 import com.manage.service.CategoryService;
 import com.manage.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;

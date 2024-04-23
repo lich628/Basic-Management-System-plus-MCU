@@ -1,6 +1,6 @@
 package com.manage.controller;
 
-import com.manage.bean.Record;
+import com.manage.entity.Record;
 import com.manage.service.RecordService;
 import com.manage.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;

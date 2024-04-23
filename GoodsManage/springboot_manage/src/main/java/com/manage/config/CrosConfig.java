@@ -18,7 +18,7 @@ public class CrosConfig implements WebMvcConfigurer {
 				// 设置允许的header属性
 				.allowedHeaders("*")
 				// 跨域允许时间
-				.maxAge(3600);
+				.maxAge(10000);
 	}
 
 }

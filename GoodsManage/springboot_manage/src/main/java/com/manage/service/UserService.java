@@ -1,7 +1,7 @@
 package com.manage.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.manage.bean.User;
+import com.manage.entity.User;
 import com.manage.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -44,9 +40,7 @@ public class UserService {
 	public String storeFile(MultipartFile file) {
 		System.out.println("UserService->storeFile--> " + file + " 开始运行存储程序...");
 		String fileName = file.getOriginalFilename();
-		Format dateFormat = new SimpleDateFormat("yyyy-MM-dd-");
-		String format = dateFormat.format(new Date());
-		String realPath = System.getProperty("user.dir") + "/src/main/resources/static/avatar";
+		String realPath = System.getProperty("user.dir") + "/GoodsManage/springboot_manage/src/main/resources/static/avatar";
 		System.out.println("UserService->storeFile--> " + realPath + " 此位置将被用作存储，请检查");
 		File folder = new File(realPath);
 		if (!folder.exists()) {
@@ -56,11 +50,11 @@ public class UserService {
 		}
 		String newName;
 		if (fileName.endsWith(".png") || fileName.endsWith(".PNG")) {
-			newName = format + UUID.randomUUID().toString() + ".png";
+			newName = fileName+".png";
 		} else if (fileName.endsWith(".jpg") || fileName.endsWith(".JPG")) {
-			newName = format + UUID.randomUUID().toString() + ".jpg";
+			newName = fileName+".jpg";
 		} else if (fileName.endsWith(".jpeg") || fileName.endsWith(".JPEG")) {
-			newName = format + UUID.randomUUID().toString() + ".jpeg";
+			newName = fileName+".jpeg";
 		} else {
 			System.out.println("UserService->storeFile--> 文件类型不受支持！程序停止");
 			return null;
