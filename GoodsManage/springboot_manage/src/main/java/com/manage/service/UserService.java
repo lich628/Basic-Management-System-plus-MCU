@@ -16,11 +16,6 @@ public class UserService {
 	@Autowired
 	private UserMapper userMapper;
 
-//	public int insertOne(User user) {
-//		System.out.println("UserService->insertOne--> " + user + "将被插入数据库");
-//		return userMapper.insert(user);
-//	}
-
 	public int validateUser(User user) {
 		QueryWrapper<User> wrapper = new QueryWrapper();
 		wrapper.eq("username", user.getUsername());
@@ -30,7 +25,7 @@ public class UserService {
 			System.out.println("UserService->validateUser--> " + user + "查无此用户");
 			return 0;//没有这个用户
 		} else if (!um.getPassword().equals(user.getPassword())) {
-			System.out.println("UserService->validateUser--> " + user + "此用户存在，但密码错误");
+			System.out.println("UserService->validateUser--> " + user + "密码错误");
 			return 1;//密码不对
 		}
 		System.out.println("UserService->validateUser--> " + user + "用户密码匹配");

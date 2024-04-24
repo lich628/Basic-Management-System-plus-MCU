@@ -20,4 +20,9 @@ public class Users {
     private String avatar;
     @TableField(exist = false)
     private MultipartFile file;
+
+    public Users(String userAccount, String password) {
+        this.userAccount = userAccount;
+        this.password = password;
+    }
 }

@@ -13,8 +13,8 @@ public class Goods {
     private String goodsName;
     private String goodsType;
     private String goodsDescription;
-    private int current_quantity;
-    private int safe_quantity;
+    private int currentQuantity;
+    private int safeQuantity;
     private String picUrl;
     @TableField(exist = false)
     private MultipartFile pic;

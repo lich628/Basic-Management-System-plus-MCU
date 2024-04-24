@@ -1,41 +1,86 @@
 package com.manage.controller;
 
 import com.manage.entity.Goods;
+import com.manage.entity.Users;
 import com.manage.service.GoodsService;
 import com.manage.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/goods")
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
-    @GetMapping("/goods")
+    @GetMapping("/list") // 查询所有物资
     public Result list() {
         return Result.ok().data("goods", goodsService.goodsList());
     }
-    @PostMapping("/goods")
+    @PostMapping("/list") // 按名字模糊查询物资
+    public Result list(@RequestBody Goods goods) {
+        return Result.ok().data("goods", goodsService.goodsList(goods));
+    }
+
+    @PostMapping("/list/add") //添加物资
     public Result add(Goods goods, HttpServletRequest request) {
-        System.out.println("GoodsController->add--> 开始运行...");
-        System.out.println("GoodsController->add--> " + goods.getPic().getOriginalFilename());
+        System.out.println("GoodsController->add--> 开始进行物资添加");
         try {
-            goods.setPicUrl(goodsService.getURL(goodsService.storeFile(goods.getPic()), request));
+            if (goods.getPic() == null) {
+                goods.setPicUrl(null);
+            }
+            else {
+                goods.setPicUrl(goodsService.getURL(goodsService.storeFile(goods.getPic()), request));
+            }
             if (goodsService.addGoods(goods) != -1) {
-                System.out.println("GoodsController->add--> insert成功");
-                return Result.ok().data("picUrl", goods.getPicUrl());
+                System.out.println("GoodsController->add--> 物资添加成功");
+                return Result.ok().data("goods", goodsService.selectById(goods.getGoodsId()));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("GoodsController->add--> insert失败！");
+            System.out.println("GoodsController->add--> 物资添加失败！");
             return Result.error().msg("出现严重错误，请关闭网页");
         }
-        return Result.ok().data("goods", goodsService.goodsList());
+        return Result.error().msg("添加物资失败");
     }
+    @PutMapping("/list") //修改物资信息
+    public Result update(Goods goods, HttpServletRequest request) {
+        System.out.println("GoodsController->update--> 修改物资信息");
+        try {
+            if (goods.getPic() != null) {
+                goods.setPicUrl(goodsService.getURL(goodsService.storeFile(goods.getPic()), request));
+            }
+            if (goodsService.updateById(goods) == 1) {
+                System.out.println("GoodsController->update--> 物资信息修改成功");
+                return Result.ok().data("goods", goodsService.selectById(goods.getGoodsId()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("GoodsController->update--> 物资信息修改失败！");
+            return Result.error().msg("出现严重错误，修改失败");
+        }
+        return Result.error().msg("修改物资信息失败");
+    }
+    @DeleteMapping("/list") //删除物资
+    public Result delete(Goods goods) {
+        System.out.println("GoodsController->delete--> 删除物资");
+        try {
+            if (goodsService.deleteById(goods.getGoodsId()) == 1) {
+                System.out.println("GoodsController->delete--> 物资删除成功");
+                return Result.ok().msg("物资删除成功");
+            } else {
+                System.out.println("GoodsController->delete--> 删除失败！");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("GoodsController->delete--> 物资删除失败！");
+            return Result.error().msg("出现严重错误，删除失败");
+        }
+        return Result.error().msg("删除物资失败");
+    }
+
+
 }

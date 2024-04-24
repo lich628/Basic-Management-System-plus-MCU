@@ -33,7 +33,7 @@ public class GoodsService {
         System.out.println("GoodsService->addGoods--> " + goods + " 新物资即将被插入");
         return goodsMapper.insert(goods);
     }
-    public int deleteById(long id){
+    public int deleteById(int id){
         System.out.println("GoodsService->deleteById--> id: " + id + " 物资即将被删除");
         return goodsMapper.deleteById(id);
     }
@@ -41,7 +41,7 @@ public class GoodsService {
         System.out.println("GoodsService->updateById--> " + goods + " 物资即将被更新");
         return goodsMapper.updateById(goods);
     }
-    public Goods selectById(long id){
+    public Goods selectById(int id){
         System.out.println("GoodsService->selectById--> id: " + id + " 物资查询");
         return goodsMapper.selectById(id);
     }
