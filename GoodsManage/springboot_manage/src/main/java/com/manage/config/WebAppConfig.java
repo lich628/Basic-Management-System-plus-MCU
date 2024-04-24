@@ -9,7 +9,7 @@ public class WebAppConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		//为了静态资源不被拦截
-		registry.addResourceHandler("/img/**").addResourceLocations("file:" + System.getProperty("user.dir") + "/src/main/resources/static/img/");
-		registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + System.getProperty("user.dir") + "/src/main/resources/static/avatar/");
+		registry.addResourceHandler("/img/**").addResourceLocations("file:" + System.getProperty("user.dir") + "/GoodsManage/springboot_manage/src/main/resources/static/img/");
+		registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + System.getProperty("user.dir") + "/GoodsManage/springboot_manage/src/main/resources/static/avatar/");
 	}
 }
