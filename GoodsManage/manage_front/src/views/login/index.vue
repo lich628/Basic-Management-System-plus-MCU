@@ -12,15 +12,15 @@
         <h3 class="title">应急物资管理系统</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="userAccount">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="userAccount"
+          v-model="loginForm.userAccount"
           placeholder="用户名"
-          name="username"
+          name="userAccount"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -66,13 +66,13 @@
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
+import { validUserAccount } from "@/utils/validate";
 
 export default {
   name: "Login",
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+    const validateUserAccount = (rule, value, callback) => {
+      if (!validUserAccount(value)) {
         callback(new Error("请输入用户名"));
       } else {
         callback();
@@ -89,13 +89,13 @@ export default {
 
     return {
       loginForm: {
-        username: "",
+        userAccount: "",
         password: "",
       },
 
       loginRules: {
-        username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+        userAccount: [
+          { required: true, trigger: "blur", validator: validateUserAccount},
         ],
         password: [
           { required: true, trigger: "blur", validator: validatePassword },

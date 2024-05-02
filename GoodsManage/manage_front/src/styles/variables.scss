@@ -1,13 +1,14 @@
 // sidebar
-$menuText:#bfcbd9;
-$menuActiveText:#409EFF;
-$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+$menuText: #9ca7b4; //菜单文字颜色
+$menuActiveText: #006de7; //子菜单文字激活颜色
+$subMenuActiveText: #006de7; //菜单根节点文字激活颜色
+//https://github.com/ElemeFE/element/issues/12951
 
-$menuBg:#304156;
-$menuHover:#263445;
+$menuBg: #ffffff;
+$menuHover: #efefef;
 
-$subMenuBg:#1f2d3d;
-$subMenuHover:#001528;
+$subMenuBg: #ffffff;
+$subMenuHover: #efefef;
 
 $sideBarWidth: 210px;
 

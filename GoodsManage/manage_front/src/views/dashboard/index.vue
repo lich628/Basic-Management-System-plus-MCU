@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="dashboard-text">
       <h1>欢迎来到应急物资管理系统</h1>
-      <h2>你好，{{ username }}</h2>
+      <h2>你好，{{ userName }}</h2>
     </div>
     <div class="pic-container">
       <div class="gif-container">
@@ -18,7 +18,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "Dashboard",
   computed: {
-    ...mapGetters(["username"]),
+    ...mapGetters(["userName"]),
   },
 };
 </script>

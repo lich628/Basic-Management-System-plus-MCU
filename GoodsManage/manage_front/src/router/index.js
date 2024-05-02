@@ -56,16 +56,37 @@ export const constantRoutes = [
   },
 
   {
+    path: '/users',
+    component: Layout,
+    redirect: '/users/list',
+    meta: { title: '用户管理', icon: 'el-icon-s-custom'},
+    children: [
+      {
+      path: 'list',
+      name: 'users',
+      component: () => import('@/views/users/list/index'),
+      meta: { title: '用户总览', icon: 'el-icon-view' },
+    },
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import('@/views/users/list/index'),
+        meta: { title: '相关订单', icon: 'el-icon-document' },
+      }
+    ]
+  },
+
+  {
     path: '/query',
     component: Layout,
-    redirect: '/query/category',
+    redirect: '/query/goods',
     name: 'Query',
     meta: { title: '查看', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'category',
-        name: 'Category',
-        component: () => import('@/views/query/category/index'),
+        path: 'goods',
+        name: 'Goods',
+        component: () => import('@/views/query/goods/index'),
         meta: { title: '物资查看', icon: 'table' }
       },
       {
@@ -78,20 +99,17 @@ export const constantRoutes = [
   },
 
   {
-    path: '/form',
+    path: '/query',
     component: Layout,
-    redirect: '/form/newCategory',
-    name: 'Form',
-    meta: {
-      title: '新增记录',
-      icon: 'el-icon-edit'
-    },
+    redirect: '/query/batch',
+    name: 'Batch',
+    meta: { title: '新增记录', icon: 'el-icon-edit'},
     children: [
       {
-        path: 'newCategory',
-        name: 'NewCategory',
-        component: () => import('@/views/form/newCategory/index'),
-        meta: { title: '新增物资', icon: 'el-icon-document' }
+        path: 'newBatch',
+        name: 'newBatch',
+        component: () => import('@/views/query/batch/index'),
+        meta: { title: '新增批次', icon: 'el-icon-document' }
       },
       {
         path: 'newRecord',

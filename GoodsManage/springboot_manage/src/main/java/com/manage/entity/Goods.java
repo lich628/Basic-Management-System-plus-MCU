@@ -14,7 +14,7 @@ public class Goods {
     private String goodsType;
     private String goodsDescription;
     private int currentQuantity;
-    private int safeQuantity;
+    private int quantityMark;
     private String picUrl;
     @TableField(exist = false)
     private MultipartFile pic;

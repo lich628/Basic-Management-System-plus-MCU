@@ -127,6 +127,7 @@ export default {
         this.listLoading = false;
       });
     },
+
     async deleteRow(id, list) {
     this.listLoading = true; // 设置加载状态
     console.log(id);

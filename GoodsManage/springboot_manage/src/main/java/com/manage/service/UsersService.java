@@ -2,6 +2,10 @@ package com.manage.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import com.manage.entity.Users;
 import com.manage.mapper.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,23 +15,46 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class UsersService {
     @Autowired
     UsersMapper usersMapper;
 
-    public List<Users> usersList(){
+    public IPage<Users> usersList(int pageNum, int pageSize){
         System.out.println("UsersService->usersList--> 查询所有用户");
-        return usersMapper.selectList(null);
+        Page<Users> page = new Page<>(pageNum, pageSize);
+        return usersMapper.selectPage(page, null);
     }
 
-    public List<Users> usersList(Users users){
+    public IPage<Users> usersList(String userNameOrAccount, String sex, String role, int pageNum, int pageSize){
         LambdaQueryWrapper<Users> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(Users::getUserName, users.getUserName());
-        System.out.println("UsersService->usersList--> " + users + " 用户名模糊查询");
-        return usersMapper.selectList(lambdaQueryWrapper);
+        if (StringUtils.isNotBlank(userNameOrAccount)) {
+            lambdaQueryWrapper.and(wrapper -> wrapper.like(Users::getUserName, userNameOrAccount.trim())
+                    .or()
+                    .like(Users::getUserAccount, userNameOrAccount.trim()));
+        }
+        if(StringUtils.isNotBlank(sex)) {
+            lambdaQueryWrapper.eq(Users::getSex, sex.trim().equalsIgnoreCase("男") ? 1 : 0);
+        }
+        if (StringUtils.isNotBlank(role)) {
+            switch (role.trim()) {
+                case "管理员":
+                    lambdaQueryWrapper.eq(Users::getRole, 0);
+                    break;
+                case "审核员":
+                    lambdaQueryWrapper.eq(Users::getRole, 1);
+                    break;
+                default:
+                    lambdaQueryWrapper.eq(Users::getRole, 2);
+                    break;
+            }
+        }
+        Page<Users> page = new Page<>(pageNum, pageSize);
+        System.out.println("UsersService->usersListLike--> 条件查询用户"+"|"+userNameOrAccount+"|"+sex+"|"+role);
+        return usersMapper.selectPage(page, lambdaQueryWrapper);
     }
 
     public int addUser(Users user){
@@ -83,16 +110,20 @@ public class UsersService {
     }
 
     public String getURL(String fileName, HttpServletRequest request) {
-        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/img/" + fileName;
+        String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/avatar/" + fileName;
         return url;
     }
 
-    public String storeFile(MultipartFile file) {
+    public String storeFile(MultipartFile file, String userName) {
         System.out.println("UsersService->storeFile--> " + file + " 保存用户头像");
         String fileName = file.getOriginalFilename();
+        String baseName = fileName.substring(0, fileName.lastIndexOf(".")); // 获取不包含扩展名的文件名
         String realPath = System.getProperty("user.dir") + "\\GoodsManage\\springboot_manage\\src\\main\\resources\\static\\avatar\\";
         System.out.println("UsersService->storeFile--> " + realPath + " 此位置将被用作存储");
         File folder = new File(realPath);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String formatDateTime = now.format(formatter);
         if (!folder.exists()) {
             System.out.println("UsersService->storeFile--> " + realPath + " 正在创建文件夹！");
             //若不存在该目录，则创建目录
@@ -100,21 +131,21 @@ public class UsersService {
         }
         String newName;
         if (fileName.endsWith(".png") || fileName.endsWith(".PNG")) {
-            newName = fileName+".png";
+            newName = userName + "_" + formatDateTime + "_" + baseName +".png";
         } else if (fileName.endsWith(".jpg") || fileName.endsWith(".JPG")) {
-            newName = fileName+".jpg";
+            newName = userName + "-" + formatDateTime + "_" + baseName +".jpg";
         } else if (fileName.endsWith(".jpeg") || fileName.endsWith(".JPEG")) {
-            newName = fileName+".jpeg";
+            newName = userName + "_" + formatDateTime + "_" + baseName +".jpeg";
         } else {
             System.out.println("UsersService->storeFile--> 文件类型不受支持！程序停止");
             return null;
         }
         try {
-            System.out.println("UsersService->storeFile--> " + folder + newName + " 正在存储图片");
+            System.out.println("UsersService->storeFile--> " + folder +"\\"+ newName + " 正在存储图片");
             file.transferTo(new File(folder, newName));
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("UsersService->storeFile--> " + folder + newName + " 此位置存储失败！程序停止");
+            System.out.println("UsersService->storeFile--> " + folder+"\\"+newName + " 此位置存储失败！程序停止");
             return null;
         }
         System.out.println("UsersService->storeFile--> " + folder + newName + " 成功存储新文件，返回主调函数");

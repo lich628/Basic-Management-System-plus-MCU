@@ -4,7 +4,7 @@
   "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
-    "serve_t": "set NODE_OPTIONS=\"--openssl-legacy-provider\" & npm run dev\n",
+    "serve_t": "npm run dev",
     "dev": " vue-cli-service serve --open",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
@@ -24,6 +24,7 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "vue": "2.6.10",
+    "vue-native-websocket": "^2.0.15",
     "vue-router": "3.0.6",
     "vuex": "3.1.0"
   },

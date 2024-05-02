@@ -5,8 +5,11 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    username: '',
+    userId: '',
+    userAccount: '',
+    userName:'',
     password: '',
+    role:'',
     avatar: ''
   }
 }
@@ -20,8 +23,17 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, username) => {
-    state.username = username
+  SET_ID: (state, userId) => {
+    state.userId = userId
+  },
+  SET_ACCOUNT: (state, userAccount) => {
+    state.userAccount = userAccount
+  },
+  SET_NAME: (state, userName) => {
+    state.userName = userName
+  },
+  SET_ROLE: (state, role) => {
+    state.role = role
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -56,9 +68,9 @@ const actions = {
   // 该函数调用reject方法，结束Promise
 
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { userAccount, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ userAccount: userAccount.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -79,10 +91,13 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { username, password, avatar } = data
+        const { userId, userAccount, password, userName, avatar, role } = data
 
-        commit('SET_NAME', username)
+        commit('SET_ID', userId)
+        commit('SET_ACCOUNT', userAccount)
         commit('SET_PWD', password)
+        commit('SET_NAME', userName)
+        commit('SET_ROLE', role)
         commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {

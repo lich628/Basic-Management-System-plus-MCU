@@ -1,7 +1,11 @@
 package com.manage.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.manage.entity.Goods;
+import com.manage.entity.Users;
 import com.manage.mapper.GoodsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,16 +23,30 @@ public class GoodsService {
     GoodsMapper goodsMapper;
 
     // 增删改查等方法
-    public List<Goods> goodsList(){
-        System.out.println("GoodsService->goodsList--> 查询所有物资");
-        return goodsMapper.selectList(null);
+    public IPage<Goods> goodsList(int pageNum, int pageSize){
+        System.out.println("GoodsService->goodsList--> 分页查询所有物资");
+        Page<Goods> page = new Page<>(pageNum, pageSize);
+        return goodsMapper.selectPage(page, null);
     }
-    public List<Goods> goodsList(Goods goods){
+
+    public IPage<Goods> goodsList(String goodsName, String goodsType, int pageNum, int pageSize) {
         LambdaQueryWrapper<Goods> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(Goods::getGoodsName, goods.getGoodsName());
-        System.out.println("GoodsService->goodsList--> " + goods + " 物资名模糊查询");
-        return goodsMapper.selectList(lambdaQueryWrapper);
+        if(StringUtils.isNotBlank(goodsName)) {
+            lambdaQueryWrapper.like(Goods::getGoodsName, goodsName.trim());
+        }
+        if (StringUtils.isNotBlank(goodsType)) {
+            lambdaQueryWrapper.eq(Goods::getGoodsType, goodsType.trim());
+        }
+        Page<Goods> page = new Page<>(pageNum, pageSize);
+        System.out.println("GoodsService->goodsList--> 分页条件查询所有物资"+"|"+goodsName+"|"+goodsType);
+        return goodsMapper.selectPage(page, lambdaQueryWrapper);
     }
+
+    public List<String> goodsTypeList(){
+        // 返回所有物资类型
+        return goodsMapper.selectDistinctGoodsTypes();
+    }
+
     public int addGoods(Goods goods){
         System.out.println("GoodsService->addGoods--> " + goods + " 新物资即将被插入");
         return goodsMapper.insert(goods);

@@ -17,15 +17,24 @@ public class GoodsController {
     private GoodsService goodsService;
 
     @GetMapping("/list") // 查询所有物资
-    public Result list() {
-        return Result.ok().data("goods", goodsService.goodsList());
+    public Result list(@RequestParam(defaultValue = "1") int pageNum,
+                       @RequestParam(defaultValue = "6") int pageSize) {
+        return Result.ok().data("goods", goodsService.goodsList(pageNum, pageSize));
     }
-    @PostMapping("/list") // 按名字模糊查询物资
-    public Result list(@RequestBody Goods goods) {
-        return Result.ok().data("goods", goodsService.goodsList(goods));
+    @GetMapping("/listLike") // 按名字模糊查询物资
+    public Result list(@RequestParam(required = false) String goodsName,
+                       @RequestParam(required = false) String goodsType,
+                       @RequestParam(defaultValue = "1") int pageNum,
+                       @RequestParam(defaultValue = "6") int pageSize) {
+        return Result.ok().data("goods", goodsService.goodsList(goodsName, goodsType, pageNum, pageSize));
     }
 
-    @PostMapping("/list/add") //添加物资
+    @GetMapping("/list/type") // 查询所有物资类型
+    public Result listType() {
+        return Result.ok().data("goodsTypes", goodsService.goodsTypeList());
+    }
+
+    @PostMapping("/list") //添加物资
     public Result add(Goods goods, HttpServletRequest request) {
         System.out.println("GoodsController->add--> 开始进行物资添加");
         try {
@@ -65,7 +74,7 @@ public class GoodsController {
         return Result.error().msg("修改物资信息失败");
     }
     @DeleteMapping("/list") //删除物资
-    public Result delete(Goods goods) {
+    public Result delete(@RequestBody Goods goods) {
         System.out.println("GoodsController->delete--> 删除物资");
         try {
             if (goodsService.deleteById(goods.getGoodsId()) == 1) {

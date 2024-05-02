@@ -13,16 +13,23 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 @RequestMapping("/users")
 public class UsersController {
+
     @Autowired
     UsersService usersService;
 
     @GetMapping("/list") //查询所有用户
-    public Result list() {
-        return Result.ok().data("users", usersService.usersList());
+    public Result list(@RequestParam(defaultValue = "1") int pageNum,
+                       @RequestParam(defaultValue = "6") int pageSize) {
+        return Result.ok().data("users", usersService.usersList(pageNum,pageSize));
     }
-    @PostMapping("/list") //按名字模糊查询用户
-    public Result list(@RequestBody Users user) {
-        return Result.ok().data("users", usersService.usersList(user));
+
+    @GetMapping("/listLike")
+    public Result listWithConditions(@RequestParam(required = false) String userNameOrAccount,
+                                     @RequestParam(required = false) String sex,
+                                     @RequestParam(required = false) String role,
+                                     @RequestParam(defaultValue = "1") int pageNum,
+                                     @RequestParam(defaultValue = "6") int pageSize) {
+        return Result.ok().data("users", usersService.usersList(userNameOrAccount, sex, role, pageNum, pageSize));
     }
 
     @PostMapping("/list/add") //添加用户
@@ -37,7 +44,7 @@ public class UsersController {
                         user.setAvatar(url + "default_boy.png");
                     }
             } else {
-                user.setAvatar(usersService.getURL(usersService.storeFile(user.getFile()), request));
+                user.setAvatar(usersService.getURL(usersService.storeFile(user.getFile(),user.getUserName()), request));
             }
             if (usersService.addUser(user) == 1) {
                 System.out.println("UsersController->add--> 用户添加成功");
@@ -51,7 +58,7 @@ public class UsersController {
             e.printStackTrace();
             return Result.error().msg("添加用户失败");
         }
-        return Result.ok().data("users", usersService.usersList());
+        return Result.error();
     }
 
     @PutMapping("/list") //修改用户信息
@@ -59,11 +66,11 @@ public class UsersController {
         System.out.println("UsersController->update--> 修改用户信息");
         try {
             if (user.getFile() != null) {
-                user.setAvatar(usersService.getURL(usersService.storeFile(user.getFile()), request));
+                user.setAvatar(usersService.getURL(usersService.storeFile(user.getFile(),user.getUserName()), request));
             }
             if (usersService.updateById(user) == 1) {
                 System.out.println("UsersController->update--> 用户信息修改成功");
-                return Result.ok().data("users", usersService.selectById(user.getUserId()));
+                return Result.ok().data("userAccount", user.getUserAccount()).data("password", user.getPassword()).data("avatar", user.getAvatar());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +81,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/list") //删除用户
-    public Result delete(Users user) {
+    public Result delete(@RequestBody Users user) {
         System.out.println("UsersController->delete--> 删除用户");
         try {
             if (usersService.deleteById(user.getUserId()) == 1) {
@@ -105,9 +112,15 @@ public class UsersController {
         } else if (flag == 1) {
             return Result.error().msg("密码错误！请重新输入");
         } else if (flag == 0) {
-            return Result.warn().msg("用户未注册");
+            return Result.warn().msg("此用户不存在");
         }
         return Result.error().msg("出现严重错误，请关闭网页");
+    }
+
+    @PostMapping("/logout")  // "token:xxx"
+    public Result logout() {
+        System.out.println("UserController->logout--> 退出登录");
+        return Result.ok();
     }
 
     @GetMapping("/info") //使用token验证用户
@@ -116,14 +129,20 @@ public class UsersController {
         String[] u = JwtUtils.getClaimsByToken(token).getSubject().split("&");
         String user_account = u[0];
         String password = u[1];
-        System.out.println("UsersController->info--> token信息--> 用户账户: " + user_account + " & 密码: " + password);
+        System.out.println("UsersController->info--> token信息--> 用户账号: " + user_account + " & 密码: " + password);
 
         Users user = new Users(user_account, password);
         int flag = usersService.validateUser(user);
         if (flag == 2) {
             user = usersService.selectByAccount(user_account);
-            System.out.println("UsersController->info--> 返回前端的信息--> " + user);
-            return Result.ok().data("username", user.getUserAccount()).data("password", user.getPassword()).data("avatar", user.getAvatar());
+            System.out.println("UsersController->info--> 返回前端的信息--> " + user.getUserId() +" | "+ user.getUserAccount()
+                    +" | "+ user.getPassword() +" | "+ user.getAvatar()+" | "+ user.getRole());
+            return Result.ok().data("userId", user.getUserId())
+                    .data("userAccount", user.getUserAccount())
+                    .data("password", user.getPassword())
+                    .data("userName", user.getUserName())
+                    .data("avatar", user.getAvatar())
+                    .data("role", user.getRole());
         }
         return Result.error().msg("用户校验失败，请重新登录");
     }
