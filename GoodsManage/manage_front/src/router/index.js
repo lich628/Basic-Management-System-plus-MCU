@@ -99,17 +99,29 @@ export const constantRoutes = [
   },
 
   {
-    path: '/query',
+    path: '/batchManage',
     component: Layout,
-    redirect: '/query/batch',
+    redirect: '/batchManage/viewBatch',
     name: 'Batch',
-    meta: { title: '新增记录', icon: 'el-icon-edit'},
+    meta: { title: '入库/出库 信息', icon: 'el-icon-edit'},
     children: [
       {
-        path: 'newBatch',
-        name: 'newBatch',
+        path: 'viewBatch',
+        name: 'viewBatch',
         component: () => import('@/views/query/batch/index'),
-        meta: { title: '新增批次', icon: 'el-icon-document' }
+        meta: { title: '暂存区', icon: 'el-icon-document' }
+      },
+      {
+        path: 'batchIn',
+        name: 'batchIn',
+        component: () => import('@/views/query/batch/index'),
+        meta: { title: '入库', icon: 'el-icon-document' }
+      },
+      {
+        path: 'batchOut',
+        name: 'batchOut',
+        component: () => import('@/views/query/batch/index'),
+        meta: { title: '出库', icon: 'el-icon-document' }
       },
       {
         path: 'newRecord',
