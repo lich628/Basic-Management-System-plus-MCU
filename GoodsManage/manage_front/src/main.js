@@ -12,6 +12,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import VueNativeSock from "vue-native-websocket";
+
 import '@/icons' // icon 图标
 import '@/permission' // permission control 权限控制
 
@@ -34,8 +36,14 @@ import '@/permission' // permission control 权限控制
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
-
 Vue.config.productionTip = false
+
+Vue.use(VueNativeSock,'ws://localhost:8088/sensorData',{
+  reconnection:true,
+  reconnectionAttempts:5,
+  reconnectionDelay:3000,
+  format:'json'
+})
 
 new Vue({
   el: '#app',
