@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class UsersService {
@@ -78,6 +79,10 @@ public class UsersService {
         return usersMapper.selectById(id);
     }
 
+    public Users selectNameAndAccount(int id){
+        return usersMapper.selectNameAndAccountById(id);
+    }
+
     public int getIdByAccount(Users user) {
         System.out.println("UsersService->getIdByAccount--> " + user + "根据账号获取用户id");
         QueryWrapper<Users> wrapper = new QueryWrapper();
@@ -85,6 +90,7 @@ public class UsersService {
         Users um = usersMapper.selectOne(wrapper);
         return um.getUserId();
     }
+
     public int deleteById(int id){
         System.out.println("UsersService->deleteById--> id: " + id + " 用户即将被删除");
         return usersMapper.deleteById(id);

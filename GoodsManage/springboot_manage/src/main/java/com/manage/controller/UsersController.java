@@ -32,6 +32,11 @@ public class UsersController {
         return Result.ok().data("users", usersService.usersList(userNameOrAccount, sex, role, pageNum, pageSize));
     }
 
+    @GetMapping("/list/{userId}")
+    public Result list(@PathVariable int userId) {
+        return Result.ok().data("users", usersService.selectNameAndAccount(userId));
+    }
+
     @PostMapping("/list/add") //添加用户
     public Result add(Users user, HttpServletRequest request) {
         System.out.println("UsersController->add--> 开始添加用户");

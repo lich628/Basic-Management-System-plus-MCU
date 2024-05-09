@@ -63,3 +63,10 @@ export function addUser(data) {
     data
   })
 }
+
+export function selectNameAndAccountById(userId) {
+  return request({
+    url: `/users/list/${userId}`,
+    method: 'get',
+  })
+}

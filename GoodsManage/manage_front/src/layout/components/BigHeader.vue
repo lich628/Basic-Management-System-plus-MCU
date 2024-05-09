@@ -1,6 +1,13 @@
 <template>
   <div class="big-header">
-    <div class="title">EGM —— 应急物资管理系统</div>
+    <div class="title-container">
+      <div class="title">EGM —— 应急物资管理系统</div>
+      <el-image
+        class="title-image"
+        :src="require('@/assets/boy1.jpeg')"
+        alt=""
+      ></el-image>
+    </div>
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -258,10 +265,24 @@ export default {
   height: 60px;
   padding: 0 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
   .title {
     font-family: 宋体,serif;
     font-size: 24px;
     font-weight: bold;
+    margin-top: 25px;
+  }
+  .title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .title-image {
+    margin-top: 50px;
+    max-width: 110px;
+    max-height: 110px;
+    margin-left: 5px;
   }
   .right-menu {
     display: flex;

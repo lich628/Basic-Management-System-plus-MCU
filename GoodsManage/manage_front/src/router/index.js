@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '欢迎', icon: 'dashboard' }
+      meta: { title: '主页', icon: 'dashboard' }
     }]
   },
 
@@ -114,13 +114,13 @@ export const constantRoutes = [
       {
         path: 'batchIn',
         name: 'batchIn',
-        component: () => import('@/views/query/batch/index'),
+        component: () => import('@/views/query/batch/batchIn'),
         meta: { title: '入库', icon: 'el-icon-document' }
       },
       {
         path: 'batchOut',
         name: 'batchOut',
-        component: () => import('@/views/query/batch/index'),
+        component: () => import('@/views/query/batch/batchOut'),
         meta: { title: '出库', icon: 'el-icon-document' }
       },
       {
