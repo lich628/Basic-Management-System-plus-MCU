@@ -10,4 +10,7 @@ import java.util.List;
 public interface GoodsMapper extends BaseMapper<Goods> {
     @Select("SELECT DISTINCT goods_type FROM goods")
     List<String> selectDistinctGoodsTypes();
+
+    @Select("SELECT * FROM goods WHERE current_quantity < quantity_mark")
+    List<Goods> selectLowInventory();
 }

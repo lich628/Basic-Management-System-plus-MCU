@@ -114,14 +114,14 @@ export const constantRoutes = [
       {
         path: 'batchIn',
         name: 'batchIn',
-        component: () => import('@/views/query/batch/batchIn'),
-        meta: { title: '入库', icon: 'el-icon-document' }
+        component: () => import('@/views/query/batch/newBatch.vue'),
+        meta: { title: '新增批次', icon: 'el-icon-document' }
       },
       {
         path: 'batchOut',
         name: 'batchOut',
         component: () => import('@/views/query/batch/batchOut'),
-        meta: { title: '出库', icon: 'el-icon-document' }
+        meta: { title: '操作批次', icon: 'el-icon-document' }
       },
       {
         path: 'newRecord',

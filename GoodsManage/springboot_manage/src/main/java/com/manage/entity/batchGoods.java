@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class batchGoods {
-    private int batchId;
+    private String batchId;
     private int goodsId;
     private int quantity;
 }

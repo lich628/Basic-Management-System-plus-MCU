@@ -17,7 +17,7 @@ public class batchGoodsService {
         return batchGoodsMapper.selectList(null);
     }
     // 根据批次id查询批次物资包含的物资与数量
-    public List<batchGoods> getBatchGoodsByBatchId(int batchId){
+    public List<batchGoods> getBatchGoodsByBatchId(String batchId){
         LambdaQueryWrapper<batchGoods> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(batchGoods::getBatchId, batchId);
         return batchGoodsMapper.selectList(queryWrapper);

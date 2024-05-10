@@ -32,3 +32,14 @@ export function getOccupiedUids() {
   })
 }
 
+export function newBatch(batch) {
+  return request({
+    url: '/batches/list',
+    method: 'post',
+    data: batch,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+

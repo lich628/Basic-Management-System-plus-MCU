@@ -23,6 +23,11 @@ public class GoodsService {
     GoodsMapper goodsMapper;
 
     // 增删改查等方法
+    public List<Goods> goodsList(){
+        System.out.println("GoodsService->goodsList--> 查询所有物资");
+        return goodsMapper.selectList(null);
+    }
+
     public IPage<Goods> goodsList(int pageNum, int pageSize){
         System.out.println("GoodsService->goodsList--> 分页查询所有物资");
         Page<Goods> page = new Page<>(pageNum, pageSize);
@@ -62,6 +67,11 @@ public class GoodsService {
     public Goods selectById(int id){
         System.out.println("GoodsService->selectById--> id: " + id + " 物资查询");
         return goodsMapper.selectById(id);
+    }
+
+    public List<Goods> selectLowInventory(){
+        System.out.println("GoodsService->selectLowInventory--> 查询库存低的物资");
+        return goodsMapper.selectLowInventory();
     }
 
     public String storeFile(MultipartFile file) {

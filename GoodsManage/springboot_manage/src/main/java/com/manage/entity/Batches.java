@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class Batches {
     @TableId(type = IdType.AUTO)
-    private int batchId;
+    private String batchId;
     private String batchType;
     private int batchStatus;
     private int operatorId;

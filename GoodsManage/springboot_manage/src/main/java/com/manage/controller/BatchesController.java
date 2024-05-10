@@ -27,7 +27,8 @@ public class BatchesController {
 
     @PostMapping("/list")
     public Result addBatch(@RequestBody Batches batch) {
-        return Result.ok().data("batches", batchesService.addBatch(batch));
+        System.out.println("添加物资批次 --> " + batch);
+        return Result.ok().msg(batchesService.addBatch(batch) == 1 ? "新增成功":"新增失败");
     }
 
     @GetMapping("/occupiedUids")
@@ -38,7 +39,8 @@ public class BatchesController {
 
     @PutMapping("/list")
     public Result updateBatch(@RequestBody Batches batch) {
-        return Result.ok().data("batches", batchesService.updateBatch(batch));
+        System.out.println("更新物资批次 --> " + batch);
+        return Result.ok().msg(batchesService.updateBatch(batch)==1? "更新成功":"更新失败");
     }
 
 }

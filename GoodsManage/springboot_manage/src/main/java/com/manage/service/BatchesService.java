@@ -22,8 +22,8 @@ public class BatchesService {
     public List<Batches> getBatches(){
         return batchesMapper.selectList(null);
     }
-
-    public Batches getBatchWithDetails(int batchId) {
+    //------------------根据批次id查询批次详情，且附带batchGoods------------------------
+    public Batches getBatchWithDetails(String batchId) {
         Batches batches = batchesMapper.selectById(batchId);
         if (batches == null) {
             return null;
@@ -49,14 +49,14 @@ public class BatchesService {
         return batches;
     }
 
-    // 添加物资详情
+    //------------------传入batches对象列表，把其全部加上物资详情（batchGoods）------------------------
     public List<Batches> batchesAddDetails(List<Batches> batches) {
-        List<Integer> batchIds = new ArrayList<>();
+        List<String> batchIds = new ArrayList<>();
         for (Batches batch : batches) {
             batchIds.add(batch.getBatchId());
         }
         List<Batches> resBatches = new ArrayList<>();
-        for (int id : batchIds) {
+        for (String id : batchIds) {
             Batches batch = getBatchWithDetails(id);
             if (batch != null) {
                 resBatches.add(batch);
@@ -65,12 +65,12 @@ public class BatchesService {
         return resBatches;
     }
 
-    // 获取目前有效batch，即is_closed字段不为1的batch
+    //-------------------获取目前有效batch，即is_closed字段不为1的batch-----------------------
     public List<Batches> getAllActiveBatch() {
         List<Batches> allBatches = new ArrayList<>();
-        List<Integer> batchIds = batchesMapper.selectActiveBatchesIds();
+        List<String> batchIds = batchesMapper.selectActiveBatchesIds();
         System.out.println(batchIds);
-        for (int batchId : batchIds) {
+        for (String batchId : batchIds) {
             Batches batch = getBatchWithDetails(batchId);
             if (batch != null) {
                 allBatches.add(batch);
@@ -79,6 +79,7 @@ public class BatchesService {
         return allBatches;
     }
 
+    //-------------------获取目前有效batch，即is_closed字段不为1的batch（条件查询）-----------------------
     public List<Batches> getAllReqBatch(String batchInfoInput, String batchType, String batchStatus) {
         LambdaQueryWrapper<Batches> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.isNull(Batches::getIsClosed).or().eq(Batches::getIsClosed, 0);
@@ -98,12 +99,12 @@ public class BatchesService {
         return batchesAddDetails(batchesList);
     }
 
-    // 获取历史batch，即is_closed字段为0的batch
+    //-----------------------获取历史batch，即is_closed字段为0的batch------------------------
     public List<Batches> getClosedBatches() {
         List<Batches> closedBatches = new ArrayList<>();
-        List<Integer> batchIds = batchesMapper.selectClosedBatchesIds();
+        List<String> batchIds = batchesMapper.selectClosedBatchesIds();
         System.out.println(batchIds);
-        for (int batchId : batchIds) {
+        for (String batchId : batchIds) {
             Batches batch = getBatchWithDetails(batchId);
             if (batch != null) {
                 closedBatches.add(batch);
@@ -131,15 +132,35 @@ public class BatchesService {
         System.out.println("历史batch筛选:"+batchId+" "+batchType+" "+batchStatus+" "+cardUid);
         return batchesAddDetails(closedBatchesList);
     }
-
+    //----------------------新增物资批次-------------------------------
     public int addBatch(Batches batch) {
-        System.out.println("addBatch: " + batch.toString());
-        return batchesMapper.insert(batch);
+        try{
+            batchesMapper.newBatch(batch);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+        // 遍历batchGoodsDetail列表，为每个batchGoods对象设置batchId，然后保存
+        List<batchGoodsDetail> goodsList = batch.getBatchGoodsDetail();
+        for (batchGoodsDetail bgd : goodsList) {
+            batchGoods bg = new batchGoods();
+            bg.setBatchId(batch.getBatchId());
+            bg.setGoodsId(bgd.getGoodsId());
+            bg.setQuantity(bgd.getQuantity());
+            batchGoodsService.addBatchGoods(bg);
+        }
+        return 1;
     }
 
     public int updateBatch(Batches batch) {
-        System.out.println("updateBatch: " + batch.toString());
-        return batchesMapper.updateById(batch);
+        System.out.println("更新batch: " + batch.toString());
+        try{
+            batchesMapper.reviewBatch(batch);
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+        return 1;
     }
 
     public List<String> getOccupiedUids() {

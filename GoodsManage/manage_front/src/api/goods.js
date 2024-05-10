@@ -8,6 +8,13 @@ export function goodsList(pageNum, pageSize) {
     })
 }
 
+export function goodsListAll() {
+  return request({
+    url: '/goods/listAll',
+    method: 'get',
+  })
+}
+
 export function goodsType() {
   return request({
     url: '/goods/list/type',

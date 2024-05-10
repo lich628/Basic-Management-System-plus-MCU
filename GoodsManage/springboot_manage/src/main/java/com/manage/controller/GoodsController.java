@@ -91,5 +91,13 @@ public class GoodsController {
         return Result.error().msg("删除物资失败");
     }
 
+    @GetMapping("/list/low") // 查询库存告急的物资
+    public Result low() {
+        return Result.ok().data("goods", goodsService.selectLowInventory());
+    }
 
+    @GetMapping("/listAll")
+    public Result listAll() {
+        return Result.ok().data("goods", goodsService.goodsList());
+    }
 }
