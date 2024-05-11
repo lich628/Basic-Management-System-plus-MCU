@@ -152,6 +152,7 @@ public class BatchesService {
         return 1;
     }
 
+        //-------------------------更新物资批次------------------------------
     public int updateBatch(Batches batch) {
         System.out.println("更新batch: " + batch.toString());
         try{
@@ -163,8 +164,44 @@ public class BatchesService {
         return 1;
     }
 
+    public String getBatchIdByCardUid(String cardUid) {
+        System.out.println("BatchesService -> getBatchIdByCardUid: " + cardUid);
+        return batchesMapper.selectBatchIdByCardUid(cardUid);
+    }
+
     public List<String> getOccupiedUids() {
         return batchesMapper.selectOccupiedUids();
+    }
+
+    //-------------------------关闭批次并更新物资数量------------------------------
+    public int closeBatchAndUpdateGoods(String batchId) {
+        Batches batch = batchesMapper.selectById(batchId);
+        if (batch == null || batch.getIsClosed() == 1) {
+            return 0; // 批次不存在或已关闭
+        }
+        List<batchGoods> batchGoodsList = batchGoodsService.getBatchGoodsByBatchId(batchId);
+        for (batchGoods bg : batchGoodsList) {
+            Goods goods = GoodsService.selectById(bg.getGoodsId());
+            if (goods != null) {
+                if ("in".equals(batch.getBatchType())) {
+                    System.out.println("BatchService -> 入库:"+goods.getGoodsName()+" "+bg.getQuantity());
+                    goods.setCurrentQuantity(goods.getCurrentQuantity() + bg.getQuantity());
+                } else if ("out".equals(batch.getBatchType())) {
+                    if (goods.getCurrentQuantity() - bg.getQuantity() < 0) {
+                        System.out.println("BatchService -> 出库失败:"+goods.getGoodsName()+" "+bg.getQuantity());
+                        return -1; // 出库数量大于当前库存
+                    }
+                    System.out.println("BatchService -> 出库:"+goods.getGoodsName()+" "+bg.getQuantity());
+                    goods.setCurrentQuantity(goods.getCurrentQuantity() - bg.getQuantity());
+                }
+                GoodsService.updateById(goods); // 更新物资数量
+            }
+        }
+
+        batch.setIsClosed(1);
+        batchesMapper.updateById(batch); // 更新批次状态
+
+        return 1;
     }
 
 }

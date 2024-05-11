@@ -14,7 +14,7 @@ public class WebSocketServer {
     private static Session session;
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("连接成功");
+        System.out.println("与前端websocket建立连接");
         WebSocketServer.session = session;
     }
     @OnMessage
@@ -28,14 +28,13 @@ public class WebSocketServer {
     }
     @OnClose
     public void onClose() {
-        System.out.println("连接关闭");
+        System.out.println("与前端websocket连接断开");
     }
 
     // 静态方法，用于向客户端发送消息
     public static void sendMessage(String message) {
         try {
             if (session != null && session.isOpen()) {
-                System.out.println("发送消息：" + message);
                 session.getBasicRemote().sendText(message);
             }
         } catch (Exception e) {

@@ -26,4 +26,13 @@ public interface BatchesMapper extends BaseMapper<Batches>{
 
     @Update("UPDATE batches SET batch_status = #{batchStatus}, reviewer_id = #{reviewerId}, review_time = #{reviewTime}, viewer_comment = #{viewerComment}, card_uid = #{cardUid} WHERE batch_id = #{batchId}")
     int reviewBatch(Batches batch);
+
+    @Select("select batch_id from batches where card_uid = #{cardUid} and is_closed = 0")
+    String selectBatchIdByCardUid(String cardUid);
+
+    @Select("select batch_id from batches where operator_id = #{operatorId}")
+    List<String> selectBatchIdsByOperatorId(String operatorId);
+
+    @Update("UPDATE batches SET is_closed = 1 WHERE batch_id = #{batchId}")
+    int closeBatch(String batchId);
 }

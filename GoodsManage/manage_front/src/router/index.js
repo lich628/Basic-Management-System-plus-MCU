@@ -112,15 +112,15 @@ export const constantRoutes = [
         meta: { title: '暂存区', icon: 'el-icon-document' }
       },
       {
-        path: 'batchIn',
-        name: 'batchIn',
+        path: 'newBatch',
+        name: 'newBatch',
         component: () => import('@/views/query/batch/newBatch.vue'),
         meta: { title: '新增批次', icon: 'el-icon-document' }
       },
       {
-        path: 'batchOut',
-        name: 'batchOut',
-        component: () => import('@/views/query/batch/batchOut'),
+        path: 'opBatch',
+        name: 'opBatch',
+        component: () => import('@/views/query/batch/opBatch.vue'),
         meta: { title: '操作批次', icon: 'el-icon-document' }
       },
       {

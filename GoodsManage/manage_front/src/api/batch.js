@@ -43,3 +43,19 @@ export function newBatch(batch) {
   })
 }
 
+export function selectBatchByUid(cardUid) {
+  return request({
+    url: '/batches/list/selectByUid',
+    method: 'get',
+    params: { cardUid }
+  })
+}
+
+export function closeBatchByBatchId(batchId) {
+  return request({
+    url: '/batches/closeBatch',
+    method: 'put',
+    params: { batchId }
+  })
+}
+

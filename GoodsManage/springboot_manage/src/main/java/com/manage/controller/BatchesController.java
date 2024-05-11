@@ -40,7 +40,32 @@ public class BatchesController {
     @PutMapping("/list")
     public Result updateBatch(@RequestBody Batches batch) {
         System.out.println("更新物资批次 --> " + batch);
-        return Result.ok().msg(batchesService.updateBatch(batch)==1? "更新成功":"更新失败");
+        return Result.ok().msg(batchesService.updateBatch(batch) == 1? "更新成功":"更新失败");
+    }
+
+    @GetMapping("/list/selectByUid")
+    public Result getBatchWithCardUid(@RequestParam String cardUid) {
+        String batchId = batchesService.getBatchIdByCardUid(cardUid);
+        if (batchId == null) {
+            return Result.warn().msg("未找到对应批次");
+        }
+        return Result.ok().data("batches", batchesService.getBatchWithDetails(batchId));
+    }
+
+    @PutMapping("/closeBatch")
+    public Result closeBatch(@RequestParam String batchId) {
+        System.out.println("处理批次 --> " + batchId);
+        int result = batchesService.closeBatchAndUpdateGoods(batchId);
+        if (result == 0) {
+            System.out.println("批次不存在或者批次已处理");
+            return Result.warn().msg("批次不存在或者批次已处理");
+        } else if (result == -1) {
+            System.out.println("非法库存数量操作");
+            return Result.error().msg("非法库存数量操作");
+        } else {
+            System.out.println("批次close操作成功");
+            return Result.ok().msg("操作成功");
+        }
     }
 
 }
