@@ -109,25 +109,25 @@ export const constantRoutes = [
         path: 'viewBatch',
         name: 'viewBatch',
         component: () => import('@/views/query/batch/index'),
-        meta: { title: '暂存区', icon: 'el-icon-document' }
+        meta: { title: '暂存区', icon: 'el-icon-folder-opened' }
       },
       {
         path: 'newBatch',
         name: 'newBatch',
         component: () => import('@/views/query/batch/newBatch.vue'),
-        meta: { title: '新增批次', icon: 'el-icon-document' }
+        meta: { title: '新增批次', icon: 'el-icon-plus' }
       },
       {
         path: 'opBatch',
         name: 'opBatch',
         component: () => import('@/views/query/batch/opBatch.vue'),
-        meta: { title: '操作批次', icon: 'el-icon-document' }
+        meta: { title: '操作批次', icon: 'el-icon-s-release' }
       },
       {
         path: 'newRecord',
         name: 'NewRecord',
         component: () => import('@/views/form/newRecord/index'),
-        meta: { title: '新增打卡', icon: 'form' }
+        meta: { title: '新增打卡', icon: 'el-icon-edit-outline' }
       }
     ]
   },

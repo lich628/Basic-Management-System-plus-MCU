@@ -14,8 +14,7 @@
 </style>
 
 <script>
-//引入网络请求方法
-import { getList } from "@/api/chart";
+import {goodsListAll} from "@/api/goods";
 
 // 引入基本模板
 let echarts = require("echarts/lib/echarts");
@@ -105,11 +104,11 @@ export default {
 
       //fetch data by function getList
       console.log("fetchdata of piechart!");
-      getList().then((res) => {
-        var records = res.data.items;
+      goodsListAll().then((res) => {
+        var records = res.data.goods;
         var objs = [];
         records.forEach((record) => {
-          let obj = { value: record.num, name: record.name };
+          let obj = { value: record.currentQuantity, name: record.goodsName };
           objs.push(obj);
         });
         myChart.setOption({
@@ -125,4 +124,3 @@ export default {
   }, //end of method
 };
 </script>
-  

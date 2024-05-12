@@ -15,7 +15,7 @@
     <el-button type="danger" style="margin-left:20px;"
               @click="submitCloseBatch">操作</el-button>
     <i class="el-icon-warning" v-if="operatorId !== '' && operatorId !== userId"
-       style="margin-left: 140px;margin-top: 18px; color: red; position: fixed">注意 : 目前操作的不是你提交的批次!</i>
+       style="margin-left: 130px; color: red">注意 : 目前操作的不是你提交的批次!</i>
   </el-card>
 </div>
   <div class="batchInfo">
@@ -57,12 +57,14 @@
 import { mapGetters} from "vuex";
 import { selectBatchByUid, closeBatchByBatchId} from "@/api/batch";
 import {selectNameAndAccountById} from "@/api/user";
+import {addIORecords} from "@/api/io_records";
 
 export default {
   name: "batchOut",
   computed: {
     ...mapGetters([
-      'userId'
+      'userId',
+      'userName'
     ])
   },
   beforeDestroy() {
@@ -157,11 +159,40 @@ export default {
       })
     },
     submitCloseBatch(){
+      if(this.scanedCardUid === '' || this.goodsList.length === 0){
+        this.$message({
+          message: '请扫描UID',
+          type: 'error'
+        });
+        return;
+      }
       closeBatchByBatchId(this.batchId).then(res => {
         if(res.code === 20000){
           this.$message({
             message: '操作成功',
             type: 'success'
+          });
+
+          let currentTime = new Date().toLocaleString('zh-CN', { hour12: false })
+          let io_records = {
+            batchId: this.batchId,
+            time: currentTime,
+            operatorId: this.userId,
+            operatorName: this.userName,
+          };
+          console.log(io_records);
+          addIORecords(io_records).then(res => {
+            if(res.code === 20000){
+              this.$message({
+                message: 'IO记录添加成功',
+                type: 'success'
+              });
+            }else{
+              this.$message({
+                message: 'IO记录添加异常',
+                type: 'error'
+              });
+            }
           });
           this.clear();
         }else if(res.code === 10000){
