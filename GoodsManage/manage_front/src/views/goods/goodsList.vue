@@ -1,7 +1,8 @@
 <template>
   <div>
     <div style="margin-top: 25px; margin-left: 20px">
-      <el-input v-model="goodsNameInput" placeholder="请输入查询物资名称" style="width: 200px"></el-input>
+      <el-tag type="info">物资查询:</el-tag>
+      <el-input v-model="goodsNameInput" placeholder="请输入查询物资名称" style="width: 200px;margin-left: 8px"></el-input>
       <el-select v-model="selectedType" placeholder="物资类别" style="margin-left: 10px; width: 120px">
         <el-option
           v-for="(type, index) in goodsTypes"

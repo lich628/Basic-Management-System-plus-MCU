@@ -6,10 +6,13 @@
 </template>
 
 <style>
+.pie{
+  height: 200px;
+}
 #pie1 {
   float: left;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 </style>
 

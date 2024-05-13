@@ -1,7 +1,8 @@
 <template>
   <div>
     <div style="margin-top: 25px; margin-left: 20px">
-    <el-input v-model="nameOrAccountInput" placeholder="用户姓名或账号" style="width: 200px"></el-input>
+      <el-tag type="info">用户查询:</el-tag>
+    <el-input v-model="nameOrAccountInput" placeholder="用户姓名或账号" style="width: 200px; margin-left: 8px"></el-input>
     <el-select v-model="sex_value" placeholder="性别" style="margin-left: 10px; width: 100px">
       <el-option
         v-for="item in sex"

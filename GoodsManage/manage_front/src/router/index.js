@@ -64,13 +64,13 @@ export const constantRoutes = [
       {
       path: 'list',
       name: 'users',
-      component: () => import('@/views/users/list/index'),
+      component: () => import('@/views/users/infoList.vue'),
       meta: { title: '用户总览', icon: 'el-icon-view' },
     },
       {
         path: 'order',
         name: 'order',
-        component: () => import('@/views/users/list/index'),
+        component: () => import('@/views/users/infoList.vue'),
         meta: { title: '相关订单', icon: 'el-icon-document' },
       }
     ]
@@ -86,13 +86,13 @@ export const constantRoutes = [
       {
         path: 'goods',
         name: 'Goods',
-        component: () => import('@/views/query/goods/index'),
+        component: () => import('@/views/goods/goodsList.vue'),
         meta: { title: '物资查看', icon: 'table' }
       },
       {
         path: 'record',
         name: 'Record',
-        component: () => import('@/views/query/record/index'),
+        component: () => import('@/views/info/record.vue'),
         meta: { title: '打卡记录查看', icon: 'tree' }
       }
     ]
@@ -108,25 +108,25 @@ export const constantRoutes = [
       {
         path: 'viewBatch',
         name: 'viewBatch',
-        component: () => import('@/views/query/batch/index'),
+        component: () => import('@/views/goods/batchList.vue'),
         meta: { title: '暂存区', icon: 'el-icon-folder-opened' }
       },
       {
         path: 'newBatch',
         name: 'newBatch',
-        component: () => import('@/views/query/batch/newBatch.vue'),
+        component: () => import('@/views/form/newBatch.vue'),
         meta: { title: '新增批次', icon: 'el-icon-plus' }
       },
       {
         path: 'opBatch',
         name: 'opBatch',
-        component: () => import('@/views/query/batch/opBatch.vue'),
+        component: () => import('@/views/form/opBatch.vue'),
         meta: { title: '操作批次', icon: 'el-icon-s-release' }
       },
       {
         path: 'newRecord',
         name: 'NewRecord',
-        component: () => import('@/views/form/newRecord/index'),
+        component: () => import('@/views/form/newRecord.vue'),
         meta: { title: '新增打卡', icon: 'el-icon-edit-outline' }
       }
     ]
