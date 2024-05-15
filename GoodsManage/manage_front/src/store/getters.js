@@ -7,6 +7,9 @@ const getters = {
   userAccount: state => state.user.userAccount,
   userName: state => state.user.userName,
   role: state => state.user.role,
-  password: state => state.user.password
+  password: state => state.user.password,
+  temperature: state => state.thresholds.temperature,
+  humidity: state => state.thresholds.humidity,
+  smokeSensor: state => state.thresholds.smokeSensor
 }
 export default getters

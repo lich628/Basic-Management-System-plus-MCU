@@ -56,7 +56,7 @@ public class GoodsController {
         return Result.error().msg("添加物资失败");
     }
     @PutMapping("/list") //修改物资信息
-    public Result update(Goods goods, HttpServletRequest request) {
+    public Result update(@RequestBody Goods goods, HttpServletRequest request) {
         System.out.println("GoodsController->update--> 修改物资信息");
         try {
             if (goods.getPic() != null) {

@@ -1,12 +1,21 @@
 <template>
+  <div>
   <div class="main-container">
     <div class="submitBatch">
       <div style="display: flex">
       <el-tag type="info">批次类型:</el-tag>
       <el-radio-group v-model="batchType" :disabled="lockType" style="margin-left: 10px; margin-top: 10px">
         <el-radio label="in">入库</el-radio>
-        <el-radio label="out">出库</el-radio>
+        <el-radio label="out" :disabled="isOrder">出库</el-radio>
       </el-radio-group>
+        <el-tag type="info" style="margin-left: 12px">是否采购订单:</el-tag>
+        <el-switch
+          v-model="isOrder"
+          :disabled="batchType === 'out'"
+          active-text="是"
+          in-active-text="否"
+          style="margin-top: 8px; margin-left: 20px"
+        ></el-switch>
         <el-switch
           v-model="lockType"
           active-text="锁定"
@@ -91,12 +100,35 @@
       </el-card>
     </div>
   </div>
+  <div class="orderOptions">
+    <el-card v-if="isOrder" style="height: 80px; width: 100%">
+      <el-tag type="info">采购来源:</el-tag>
+      <el-radio-group  v-model="SourceType" style="margin-left: 30px; margin-top: 10px">
+        <el-radio label="供应商" @change="getSuppliers">供应商</el-radio>
+        <el-radio label="零售商" @change="clearAddress">零售商</el-radio>
+      </el-radio-group>
+      <el-select v-if="SourceType === '供应商'" v-model="location" style="margin-left: 20px">
+        <el-option
+          v-for="item in suppliers"
+          :key="item.id"
+          :label="item.name"
+          :value="item.address">
+        </el-option>
+      </el-select>
+      <el-tag v-if="SourceType === '零售商'" style="margin-left: 20px">请输入地址/来源</el-tag>
+      <el-input v-if="SourceType === '零售商'" v-model="location"
+                style="width: 600px;margin-left: 10px"></el-input>
+    </el-card>
+  </div>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { goodsListAll} from "@/api/goods";
 import {newBatch} from "@/api/batch";
+import {getSuppliers} from "@/api/suppliers";
+import {addOrder} from "@/api/orders";
 
 export default {
   name: "Batch",
@@ -109,7 +141,11 @@ export default {
       multipleSelection: [], // 选中的物资
       operatorId: '',
       batchType: '',
-      opComment: ''
+      opComment: '',
+      isOrder: false,
+      SourceType:'',
+      location:'',
+      suppliers:[]
     }
   },
   methods: {
@@ -180,13 +216,6 @@ export default {
         });
         return;
       }
-      if (!this.opComment) {
-        this.$message({
-          type: 'warning',
-          message: '操作备注不能为空!'
-        });
-        return;
-      }
       // 检查批次列表是否为空
       if (this.batchList.length === 0) {
         this.$message({
@@ -195,6 +224,24 @@ export default {
         });
         return;
       }
+      if (!this.opComment) {
+        this.$message({
+          type: 'warning',
+          message: '操作备注不能为空!'
+        });
+        return;
+      }
+
+      if(this.isOrder) {
+        if(this.SourceType === '' || this.location === '') {
+          this.$message({
+            type: 'warning',
+            message: '请完善采购信息!'
+          });
+          return;
+        }
+      }
+
       for (let i = 0; i < this.batchList.length; i++) {
         if (this.batchList[i].quantity === 0) {
           this.$message({
@@ -226,12 +273,30 @@ export default {
             type: 'success',
             message: '提交成功'
           });
+
+          if(this.isOrder) {
+            let Orders = {
+              batchId: this.newBatchId,
+              sourceType: this.SourceType,
+              location: this.location
+            };
+
+            addOrder(Orders).then(res => {
+              console.log('Order added:', res);
+            }).catch(err => {
+              console.error('Failed to add order:', err);
+            });
+          }
           console.log(res);
           this.newBatchId = '';
           this.lockType = false;
           this.batchList = [];
           this.batchType = '';
           this.opComment = '';
+
+          this.isOrder = false;
+          this.location = '';
+          this.SourceType = ''
         })
       }).catch(() => {
         this.$message({
@@ -239,6 +304,18 @@ export default {
           message: '已取消提交'
         });
       });
+    },
+    getSuppliers(){
+      getSuppliers().then(res => {
+        console.log(res)
+        this.suppliers = res.data.suppliers
+      })
+    },
+    clearOrderInfo(){
+
+    },
+    clearAddress(){
+      this.location = ''
     }
   },
   created() {
@@ -248,6 +325,13 @@ export default {
     ...mapGetters([
       'userId',
     ])
+  },
+  watch: {
+    isOrder(newVal) {
+      if (newVal) {
+        this.batchType = 'in';
+      }
+    }
   }
 }
 </script>
@@ -275,6 +359,11 @@ export default {
     .listCard{
       height: 545px;
     }
+  }
+
+  .orderOptions{
+    margin-top: 10px;
+    margin-left: 10px;
   }
 
   .normal-row{

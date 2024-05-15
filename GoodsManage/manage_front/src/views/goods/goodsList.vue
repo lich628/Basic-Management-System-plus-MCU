@@ -31,7 +31,14 @@
         </el-table-column>
         <el-table-column prop="picUrl" label="物资图片">
           <template slot-scope="scope">
-            <img :src="scope.row.picUrl" style="width: 50px; height: 50px" alt="图片加载失败">
+            <el-popover
+              placement="right"
+              trigger="hover"
+              :popper-class="'image-popover'"
+            >
+              <img :src="scope.row.picUrl" alt="物资图片" style="width: 100%; height: auto;">
+              <img slot="reference" :src="scope.row.picUrl" style="width: 50px; height: 50px" alt="图片加载失败">
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column
@@ -53,8 +60,9 @@
         <el-table-column prop="operation" label="操作">
           <template slot-scope="scope">
             <div>
-              <el-button type="primary" size="mini" >查看编辑</el-button>
-              <el-button type="danger" size="mini" style="margin-left: 20px" @click="openDeleteConfirmDialog(scope.row.goodsId, scope.row.goodsName)">删除</el-button>
+              <el-button type="primary" size="mini" @click="editGoods(scope.row)">编辑</el-button>
+              <el-button type="danger" size="mini" style="margin-left: 20px"
+                         @click="openDeleteConfirmDialog(scope.row.goodsId, scope.row.goodsName)">删除</el-button>
             </div>
           </template>
         </el-table-column>
@@ -82,14 +90,48 @@
       <el-button type="primary" @click="deleteGoods">确定</el-button>
     </span>
   </el-dialog>
+    <el-dialog
+      title="编辑物资"
+      :visible.sync="editDialogVisible"
+      width="30%"
+      @close="editDialogVisible = false" :append-to-body="true" :center="true">
+      <el-form :model="editingGoods">
+        <el-form-item label="物资名称">
+          <el-input v-model="editingGoods.goodsName"></el-input>
+        </el-form-item>
+        <el-form-item label="物资类别">
+          <el-input v-model="editingGoods.goodsType"></el-input>
+        </el-form-item>
+        <el-form-item label="物资描述">
+          <el-input v-model="editingGoods.goodsDescription"></el-input>
+        </el-form-item>
+        <el-form-item label="目前在库数量">
+          <el-input v-model="editingGoods.currentQuantity"></el-input>
+        </el-form-item>
+        <el-form-item label="库存预警值">
+          <el-input v-model="editingGoods.quantityMark"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="saveGoods">保存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { goodsList, goodsType, goodsSearch, deleteGoodsById } from "@/api/goods";
+import {goodsList, goodsType, goodsSearch, deleteGoodsById, updateGoods} from "@/api/goods";
+import { mapGetters } from "vuex";
+
 export default {
   created() {
     this.fetchGoodslist();
     this.fetchGoodsTypes();
+  },
+  computed: {
+    ...mapGetters([
+      "role"
+    ])
   },
   data() {
     return {
@@ -97,6 +139,8 @@ export default {
       goodsTypes: [],
       selectedType: '',
       goodsTableData:[],
+      editDialogVisible: false,
+      editingGoods: {},
 
       total: 0,
       pageNum: 1,
@@ -145,6 +189,13 @@ export default {
       this.fetchGoodsTypes();
     },
     openDeleteConfirmDialog(goodsId, goodName) {
+      if (this.role !== 0){
+        this.$message({
+          message: "非管理员，拒绝访问",
+          type: "error",
+        });
+        return;
+      }
       this.deleteConfirmDialogVisible = true;
       this.goodsIdToDelete = goodsId;
       this.goodsNameToDelete = goodName;
@@ -168,12 +219,43 @@ export default {
       } finally {
         this.deleteConfirmDialogVisible = false;
       }
+    },
+    editGoods(goods) {
+      if(this.role !== 0){
+        this.$message({
+          message: "非管理员，拒绝访问",
+          type: "error",
+        });
+        return;
+      }
+      this.editingGoods = Object.assign({}, goods);
+      this.editDialogVisible = true;
+    },
+    async saveGoods() {
+      try {
+        await updateGoods(this.editingGoods);
+        this.fetchGoodslist();
+        this.$message({
+          message: "保存成功",
+          type: "success",
+        });
+      } catch (err) {
+        this.$message({
+          message: "保存失败",
+          type: "error",
+        });
+      } finally {
+        this.editDialogVisible = false;
+      }
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
+.image-popover img {
+  max-width: 300px;
+  max-height: 300px;
+}
 </style>
 

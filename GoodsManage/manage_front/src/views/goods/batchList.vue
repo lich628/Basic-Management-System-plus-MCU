@@ -53,6 +53,7 @@
             <el-tag v-else style="margin: 10px">未分配</el-tag>
             <el-button v-if="batch.batchStatus === 0" type="primary" size="small"
                        @click="handleCheck(batch)">操作</el-button>
+            <el-button v-if="batch.batchStatus === 2" type="danger" size="small" @click="delBatch(batch)">删除</el-button>
           </template>
           <el-descriptions-item>
             <template slot="label">
@@ -203,7 +204,7 @@
 </template>
 
 <script>
-import { batchList, batchListSelect, updateBatch, getOccupiedUids} from '@/api/batch'
+import {batchList, batchListSelect, updateBatch, getOccupiedUids, closeBatchByBatchId} from '@/api/batch'
 import { selectNameAndAccountById} from "@/api/user";
 import {Message} from "element-ui";
 import { mapGetters } from "vuex";
@@ -418,6 +419,29 @@ export default {
         }
       });
       this.getBatchList();
+    },
+    delBatch(batch){
+      if(this.role === 0 || this.userId === batch.operatorId || this.userId === batch.reviewerId) {
+        this.$confirm('确认移除该批次吗？')
+          .then(_ => {
+            closeBatchByBatchId(batch.batchId).then((res) => {
+              this.$message({
+                message: "删除成功",
+                type: "success",
+              });
+              this.getBatchList();
+            }).catch((error) => {
+              console.log(error);
+            });
+            this.getBatchList();
+          })
+          .catch(_ => {});
+      } else {
+        this.$message({
+          message: "权限不足，非管理员或批次相关人员!",
+          type: "error",
+        });
+      }
     }
   }
 }

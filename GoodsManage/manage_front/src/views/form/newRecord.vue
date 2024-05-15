@@ -191,7 +191,7 @@ export default {
               message: "添加成功",
               type: "success",
             });
-            this.$router.push({ path: "/query/record" }); //跳转到打卡查看表格
+            this.$router.push({ path: "/info/record" }); //跳转到打卡查看表格
             this.$refs.form.resetFields();
           });
         } else {

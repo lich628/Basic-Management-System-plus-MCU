@@ -37,3 +37,14 @@ export function deleteGoodsById(Goods) {
     data: Goods
   })
 }
+
+export function updateGoods(Goods) {
+  return request({
+    url: '/goods/list',
+    method: 'put',
+    data: Goods,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}

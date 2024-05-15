@@ -7,7 +7,7 @@
 
 <style>
 .pie{
-  height: 200px;
+  height: 100vh;
 }
 #pie1 {
   float: left;
@@ -18,14 +18,16 @@
 
 <script>
 import {goodsListAll} from "@/api/goods";
+import * as echarts from 'echarts/core';
+import { PieChart } from 'echarts/charts';
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent
+} from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
 
-// 引入基本模板
-let echarts = require("echarts/lib/echarts");
-// 引入饼状图组件
-require("echarts/lib/chart/pie");
-// 引入提示框和title组件
-require("echarts/lib/component/tooltip");
-require("echarts/lib/component/title");
+echarts.use([TitleComponent, TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
 export default {
   created() {},
@@ -83,7 +85,7 @@ export default {
           textStyle: {
             //图例中文字的样式
             color: "#000",
-            fontSize: 20,
+            fontSize: 15,
           },
           //data: ["KN94口罩", "N95口罩", "防护服", "酒精消毒棉片", "防护眼罩"],
         },

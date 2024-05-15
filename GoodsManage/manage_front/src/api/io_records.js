@@ -28,8 +28,7 @@ export function addIORecords(io_Records) {
 
 export function deleteIORecords(ioId) {
   return request({
-    url: '/ioRecords/list',
+    url: `/ioRecords/list/${ioId}`,
     method: 'delete',
-    ioId
   })
 }

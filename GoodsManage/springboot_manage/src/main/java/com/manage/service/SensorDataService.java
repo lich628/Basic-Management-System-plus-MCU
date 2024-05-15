@@ -93,11 +93,6 @@ public class SensorDataService {
                                         break;
                                 }
                             }
-                            try{
-                                insertSensorData(data);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             try {
                                 ObjectMapper mapper = new ObjectMapper();
                                 String json = mapper.writeValueAsString(data);
@@ -134,8 +129,16 @@ public class SensorDataService {
         return reading;
     }
 
-    public void insertSensorData(SensorData sensorData) {
-        sensorDataMapper.insert(sensorData);
+    public int insertSensorData(SensorData sensorData) {
+        return sensorDataMapper.insert(sensorData);
+    }
+
+    public List<SensorData> getAllSensorData() {
+        return sensorDataMapper.selectList(null);
+    }
+
+    public int deleteSensorDataById(int id) {
+        return sensorDataMapper.deleteById(id);
     }
 
 }

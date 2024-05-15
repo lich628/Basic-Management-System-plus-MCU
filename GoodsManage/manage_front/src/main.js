@@ -17,25 +17,8 @@ import VueNativeSock from "vue-native-websocket";
 import '@/icons' // icon 图标
 import '@/permission' // permission control 权限控制
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently, MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-
-// 以下注释只为去除mock
-// if (process.env.NODE_ENV === 'production') {
-//   const { mockXHR } = require('../mock')
-//   mockXHR()
-// }
-
-// set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+
 Vue.config.productionTip = false
 
 Vue.use(VueNativeSock,'ws://localhost:8088/sensorData',{

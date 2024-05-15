@@ -1,5 +1,8 @@
 <template>
   <div class="login-container">
+    <div style="width: 800px">
+      <h1 class="BigTitle">应急物资管理系统</h1>
+    </div>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -9,7 +12,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">应急物资管理系统</h3>
+        <h3 class="title">系统登录</h3>
       </div>
 
       <el-form-item prop="userAccount">
@@ -196,9 +199,18 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg: #2d3a4b;
+$bg: #3c4b61;
 $dark_gray: #889aa4;
 $light_gray: #eee;
+
+.BigTitle{
+  font-family: 宋体,serif;
+  font-size: 80px;
+  margin-top: -100px;
+  margin-left: 60px;
+  color: #ffffff;
+  text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.5);
+}
 
 .login-container {
   display: flex;
@@ -224,6 +236,7 @@ $light_gray: #eee;
     padding: 0 35px 0;
     margin: 0 auto;
     overflow: hidden;
+    margin-left: 80px;
   }
 
   .svg-container {

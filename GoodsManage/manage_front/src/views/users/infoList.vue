@@ -100,7 +100,12 @@
 <script>
 
 import { userList, userListLike, deleteUserById } from "@/api/user";
+import {mapGetters} from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(['role'])
+  },
   data() {
     return {
       nameOrAccountInput: '',
@@ -160,6 +165,13 @@ export default {
       this.fetchUserlist()
     },
     openDeleteConfirmDialog(userId) {
+      if(this.role !== 0){
+        this.$message({
+          message: "没有权限",
+          type: "error",
+        });
+        return;
+      }
       this.userIdToDelete = userId;
       this.deleteConfirmDialogVisible = true;
     },

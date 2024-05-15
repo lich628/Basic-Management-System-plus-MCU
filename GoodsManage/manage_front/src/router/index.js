@@ -59,75 +59,25 @@ export const constantRoutes = [
     path: '/users',
     component: Layout,
     redirect: '/users/list',
-    meta: { title: '用户管理', icon: 'el-icon-s-custom'},
+    meta: { title: '用户', icon: 'el-icon-s-custom'},
     children: [
       {
       path: 'list',
       name: 'users',
       component: () => import('@/views/users/infoList.vue'),
-      meta: { title: '用户总览', icon: 'el-icon-view' },
+      meta: { title: '所有用户', icon: 'el-icon-view' },
     },
       {
-        path: 'order',
-        name: 'order',
-        component: () => import('@/views/users/infoList.vue'),
-        meta: { title: '相关订单', icon: 'el-icon-document' },
-      }
-    ]
-  },
-
-  {
-    path: '/query',
-    component: Layout,
-    redirect: '/query/goods',
-    name: 'Query',
-    meta: { title: '查看', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'goods',
-        name: 'Goods',
-        component: () => import('@/views/goods/goodsList.vue'),
-        meta: { title: '物资查看', icon: 'table' }
+        path: 'userInfo',
+        name: 'userInfo',
+        component: () => import('@/views/users/infoOwn.vue'),
+        meta: { title: '个人信息', icon: 'el-icon-document' },
       },
       {
-        path: 'record',
-        name: 'Record',
-        component: () => import('@/views/info/record.vue'),
-        meta: { title: '打卡记录查看', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/batchManage',
-    component: Layout,
-    redirect: '/batchManage/viewBatch',
-    name: 'Batch',
-    meta: { title: '入库/出库 信息', icon: 'el-icon-edit'},
-    children: [
-      {
-        path: 'viewBatch',
-        name: 'viewBatch',
-        component: () => import('@/views/goods/batchList.vue'),
-        meta: { title: '暂存区', icon: 'el-icon-folder-opened' }
-      },
-      {
-        path: 'newBatch',
-        name: 'newBatch',
-        component: () => import('@/views/form/newBatch.vue'),
-        meta: { title: '新增批次', icon: 'el-icon-plus' }
-      },
-      {
-        path: 'opBatch',
-        name: 'opBatch',
-        component: () => import('@/views/form/opBatch.vue'),
-        meta: { title: '操作批次', icon: 'el-icon-s-release' }
-      },
-      {
-        path: 'newRecord',
-        name: 'NewRecord',
-        component: () => import('@/views/form/newRecord.vue'),
-        meta: { title: '新增打卡', icon: 'el-icon-edit-outline' }
+        path: 'userBatch',
+        name: 'userBatch',
+        component: () => import('@/views/users/userBatch.vue'),
+        meta: { title: '相关批次', icon: 'el-icon-document' },
       }
     ]
   },
@@ -153,6 +103,90 @@ export const constantRoutes = [
         component: () => import('@/views/chart/linechart'), // Parent router-view
         name: 'Linechart',
         meta: { title: '仓库监控', icon: 'el-icon-data-line' }
+      }
+    ]
+  },
+
+  {
+    path: '/check',
+    component: Layout,
+    redirect: '/check/viewBatch',
+    name: 'check',
+    meta: { title: '处理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'viewBatch',
+        name: 'viewBatch',
+        component: () => import('@/views/goods/batchList.vue'),
+        meta: { title: '暂存区', icon: 'el-icon-folder-opened' }
+      },
+    ]
+  },
+
+  {
+    path: '/operate',
+    component: Layout,
+    redirect: '/operate/newBatch',
+    name: 'operate',
+    meta: { title: '操作', icon: 'el-icon-edit'},
+    children: [
+      {
+        path: 'newBatch',
+        name: 'newBatch',
+        component: () => import('@/views/form/newBatch.vue'),
+        meta: { title: '新增批次', icon: 'el-icon-plus' }
+      },
+      {
+        path: 'opBatch',
+        name: 'opBatch',
+        component: () => import('@/views/form/opBatch.vue'),
+        meta: { title: '操作批次', icon: 'el-icon-s-release' }
+      },
+      {
+        path: 'newRecord',
+        name: 'NewRecord',
+        component: () => import('@/views/form/newRecord.vue'),
+        meta: { title: '新增打卡', icon: 'el-icon-edit-outline' }
+      }
+    ]
+  },
+
+  {
+    path: '/info',
+    component: Layout,
+    redirect: '/info/goods',
+    name: 'Info',
+    meta: { title: '信息查看', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'goods',
+        name: 'Goods',
+        component: () => import('@/views/goods/goodsList.vue'),
+        meta: { title: '物资查看', icon: 'table' }
+      },
+      {
+        path: 'orders',
+        name: 'orders',
+        component: () => import('@/views/info/ordersList.vue'),
+        meta: { title: '采购信息', icon: 'table' }
+      },
+      {
+        path: 'supplier',
+        name: 'supplier',
+        component: () => import('@/views/info/suppliers.vue'),
+        meta: { title: '供应商信息', icon: 'table' }
+      },
+      {
+        path: 'logistics',
+        name: 'logistics',
+        component: () => import('@/views/info/logistics.vue'),
+        meta: { title: '物流查看', icon: 'table' }
+      },
+      {
+        path: 'record',
+        name: 'Record',
+        component: () => import('@/views/info/record.vue'),
+        meta: { title: '打卡记录查看', icon: 'tree' }
       }
     ]
   },

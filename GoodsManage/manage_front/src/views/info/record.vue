@@ -98,6 +98,8 @@
 
 <script>
 import { getList, deleteTuple } from "@/api/record";
+import {Message} from "element-ui";
+import {mapGetters} from "vuex";
 
 export default {
   filters: {
@@ -119,6 +121,11 @@ export default {
   created() {
     this.fetchData();
   },
+  computed:{
+    ...mapGetters([
+      'role'
+    ])
+  },
   methods: {
     fetchData() {
       this.listLoading = true;
@@ -128,8 +135,12 @@ export default {
       });
     },
 
-    async deleteRow(id, list) {
-    this.listLoading = true; // 设置加载状态
+     deleteRow(id, list) {
+      if (this.role !== 0) {
+        Message.error('权限不足');
+        return;
+      }
+      this.listLoading = true; // 设置加载状态
     console.log(id);
     const tempid = list.find((item) => item.id === id).id;
     console.log(tempid);
@@ -137,7 +148,7 @@ export default {
     if (index !== -1) {
       list.splice(index, 1);
       try {
-        await deleteTuple(tempid);
+        deleteTuple(tempid);
         this.$message({
           message: "删除成功",
           type: "success",
