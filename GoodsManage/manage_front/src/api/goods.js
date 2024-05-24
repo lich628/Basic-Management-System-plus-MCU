@@ -48,3 +48,19 @@ export function updateGoods(Goods) {
     }
   })
 }
+
+export function addGoods(Goods) {
+  return request({
+    url: '/goods/list',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data: Goods,
+  })
+}
+
+export function getTypeQuantity() {
+  return request({
+    url: '/goods/typeQuantity',
+    method: 'get',
+  })
+}

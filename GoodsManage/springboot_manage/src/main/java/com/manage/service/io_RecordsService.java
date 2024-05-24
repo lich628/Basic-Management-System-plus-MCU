@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.manage.entity.Users;
+
 import com.manage.entity.io_Records;
 import com.manage.mapper.io_RecordsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class io_RecordsService {
         return io_recordsMapper.insert(io_records);
     }
 
-    public int deleteRecord(String id){
+    public int deleteRecord(int id){
         return io_recordsMapper.deleteById(id);
     }
 

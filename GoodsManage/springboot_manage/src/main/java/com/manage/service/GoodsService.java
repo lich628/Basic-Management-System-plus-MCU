@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -52,6 +53,10 @@ public class GoodsService {
         return goodsMapper.selectDistinctGoodsTypes();
     }
 
+    public List<Map<String, Object>> getGoodsTypeAndQuantity() {
+        return goodsMapper.getGoodsTypeAndQuantity();
+    }
+
     public int addGoods(Goods goods){
         System.out.println("GoodsService->addGoods--> " + goods + " 新物资即将被插入");
         return goodsMapper.insert(goods);
@@ -65,7 +70,6 @@ public class GoodsService {
         return goodsMapper.updateById(goods);
     }
     public Goods selectById(int id){
-        System.out.println("GoodsService->selectById--> id: " + id + " 物资查询");
         return goodsMapper.selectById(id);
     }
 

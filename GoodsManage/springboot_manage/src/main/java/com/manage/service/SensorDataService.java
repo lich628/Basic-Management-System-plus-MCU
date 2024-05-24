@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,12 +24,12 @@ public class SensorDataService {
     private WebSocketServer webSocketServer;
 
     private volatile boolean reading = false;
+    private SerialPort serialPort;
 
     @PostConstruct
     public void startSerialPortReader() {
         reading = true;
         Thread serialPortThread = new Thread(() -> {
-            SerialPort serialPort = null;
             List<String> possiblePorts = Arrays.asList("COM6", "COM7", "COM8", "COM9", "COM10");
 
             while (reading) {
@@ -125,8 +127,21 @@ public class SensorDataService {
         reading = false;
     }
 
-    public boolean isReading() {
-        return reading;
+    public void controlBuzzer(boolean turnOn) {
+        if (serialPort != null && serialPort.isOpen()) {
+            try (OutputStream out = serialPort.getOutputStream()) {
+                if (turnOn) {
+                    out.write('1');
+                } else {
+                    out.write('0');
+                }
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("串口未打开或未连接。");
+        }
     }
 
     public int insertSensorData(SensorData sensorData) {
@@ -140,5 +155,4 @@ public class SensorDataService {
     public int deleteSensorDataById(int id) {
         return sensorDataMapper.deleteById(id);
     }
-
 }

@@ -1,7 +1,7 @@
 // src/store/modules/thresholds.js
 const state = {
   temperature: 50,
-  humidity: { min: 5, max: 70 },
+  humidity: 70,
   smokeSensor: 400
 }
 

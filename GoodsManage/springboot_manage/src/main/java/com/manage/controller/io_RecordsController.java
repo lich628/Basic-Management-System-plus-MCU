@@ -41,14 +41,10 @@ public class io_RecordsController {
         }
     }
 
-    @DeleteMapping("/list")
-    public void deleteRecord(String ioId){
-        System.out.println("io_RecordsController->deleteRecord--> 开始删除数据, id为"+"id+");
-        if(io_recordsService.deleteRecord(ioId) == 1){
-            System.out.println("io_RecordsController->deleteRecord--> 删除数据成功");
-        }
-        else{
-            System.out.println("io_RecordsController->deleteRecord--> 删除数据失败");
-        }
+    @DeleteMapping("/list/{ioId}")
+    public Result deleteRecord(@PathVariable int ioId){
+        System.out.println("io_RecordsController->deleteRecord--> 开始删除数据, id为"+ioId);
+        return io_recordsService.deleteRecord(ioId) == 1 ? Result.ok() : Result.error();
+
     }
 }

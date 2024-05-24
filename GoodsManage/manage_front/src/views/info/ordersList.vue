@@ -60,9 +60,13 @@
 <script>
 import {deleteOrder, getOrders, updateOrder} from "@/api/orders";
 import {Message} from "element-ui";
+import {mapGetters} from "vuex";
 
 export default {
   name: "ordersList",
+  computed:{
+    ...mapGetters(['role'])
+  },
   data() {
     return {
       ordersData: [],

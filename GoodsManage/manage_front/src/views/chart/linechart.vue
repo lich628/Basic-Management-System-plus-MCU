@@ -40,6 +40,7 @@ import * as echarts from 'echarts';
 import {addData, deleteData, getData} from "@/api/env_record";
 import {Message} from "element-ui";
 import { mapGetters, mapActions } from 'vuex';
+import { buzz } from "@/api/env_record";
 
 export default {
   name: 'LineChart',
@@ -121,7 +122,7 @@ export default {
       });
     });
     this.inputTemperature = this.thresholdTemperature;
-    this.inputHumidityMax = this.thresholdHumidity.max;
+    this.inputHumidityMax = this.thresholdHumidity;
     this.inputSmokeSensor = this.thresholdSmokeSensor;
   },
   methods: {
@@ -145,13 +146,16 @@ export default {
         if (this.autoRec && this.isException(data)) {
           let dataWithTime = {...data, time: new Date().toLocaleString('zh-CN', { hour12: false })};
           this.addExceptionData(dataWithTime);
+          buzz(true);
+          setTimeout(() => {
+            buzz(false);
+          }, 2000);
         }
       }
     },
     isException(data) {
       return data.temperature > this.thresholdTemperature ||
-        data.humidity < this.thresholdHumidity.min ||
-        data.humidity > this.thresholdHumidity.max ||
+        data.humidity > this.thresholdHumidity ||
         data.smokeSensor > this.thresholdSmokeSensor;
     },
     submitThresholds(){
@@ -161,7 +165,7 @@ export default {
       }
       const newThresholds = {
         temperature: this.inputTemperature,
-        humidity: { max: this.inputHumidityMax },
+        humidity: this.inputHumidityMax,
         smokeSensor: this.inputSmokeSensor
       };
       this.setThresholds(newThresholds);
@@ -215,7 +219,7 @@ export default {
       this.exceptionData = res.data.sensorData;
     },
     async addExceptionData(data) {
-      await addData(data);
+      addData(data);
       this.getExceptionData();
     },
     deleteData(index) {

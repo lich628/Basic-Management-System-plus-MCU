@@ -73,7 +73,7 @@
     </div>
     <div class="goodsList">
       <el-card class="listCard">
-      <el-table style="height: 400px; overflow: auto"  :data="goodsList" :row-class-name="rowClassName"
+      <el-table style="height: 400px; overflow: auto" :data="goodsList" :row-class-name="rowClassName"
                 @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
@@ -94,7 +94,7 @@
         <el-tag type="warning" style="margin: 5px 10px">过低</el-tag>
         <el-tag type="danger">无储货</el-tag>
         <el-button size="small" type="primary"
-                   style="width: 85px; margin-left: 335px"
+                   style="margin-left: 150px"
                     @click="addToBatch">添加到批次</el-button>
       </div>
       </el-card>

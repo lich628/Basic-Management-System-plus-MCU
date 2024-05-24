@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BatchesService {
@@ -22,6 +23,11 @@ public class BatchesService {
     public List<Batches> getBatches(){
         return batchesMapper.selectList(null);
     }
+
+    public Map<String, Integer> getBatchStatistics() {
+        return batchesMapper.getBatchStatistics();
+    }
+
     //------------------根据批次id查询批次详情，且附带batchGoods------------------------
     public Batches getBatchWithDetails(String batchId) {
         Batches batches = batchesMapper.selectById(batchId);
@@ -69,7 +75,7 @@ public class BatchesService {
     public List<Batches> getAllActiveBatch() {
         List<Batches> allBatches = new ArrayList<>();
         List<String> batchIds = batchesMapper.selectActiveBatchesIds();
-        System.out.println(batchIds);
+        System.out.println("BatchesService --> 查询批次");
         for (String batchId : batchIds) {
             Batches batch = getBatchWithDetails(batchId);
             if (batch != null) {
@@ -80,7 +86,7 @@ public class BatchesService {
     }
 
     //-------------------获取目前有效batch，即is_closed字段不为1的batch（条件查询）-----------------------
-    public List<Batches> getAllReqBatch(String batchInfoInput, String batchType, String batchStatus) {
+    public List<Batches> getReqBatch(String batchInfoInput, String batchType, String batchStatus) {
         LambdaQueryWrapper<Batches> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.isNull(Batches::getIsClosed).or().eq(Batches::getIsClosed, 0);
         if (StringUtils.isNotBlank(batchInfoInput)) {
@@ -95,7 +101,7 @@ public class BatchesService {
             lambdaQueryWrapper.eq(Batches::getBatchStatus, batchStatus.trim());
         }
         List<Batches> batchesList = batchesMapper.selectList(lambdaQueryWrapper);
-        System.out.println("batch筛选条件为:"+batchInfoInput+" "+batchType+" "+batchStatus);
+        System.out.println("批次筛选条件为:"+batchInfoInput+" "+batchType+" "+batchStatus);
         return batchesAddDetails(batchesList);
     }
 
@@ -103,7 +109,7 @@ public class BatchesService {
     public List<Batches> getClosedBatches() {
         List<Batches> closedBatches = new ArrayList<>();
         List<String> batchIds = batchesMapper.selectClosedBatchesIds();
-        System.out.println(batchIds);
+        System.out.println("BatchesService --> 查询历史批次");
         for (String batchId : batchIds) {
             Batches batch = getBatchWithDetails(batchId);
             if (batch != null) {
@@ -113,11 +119,13 @@ public class BatchesService {
         return closedBatches;
     }
 
-    public List<Batches> getReqClosedBatch(String batchId, String batchType, String batchStatus, String cardUid) {
+    public List<Batches> getReqClosedBatch(String batchInfoInput, String batchType, String batchStatus) {
         LambdaQueryWrapper<Batches> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Batches::getIsClosed, 1);
-        if (StringUtils.isNotBlank(batchId)) {
-            lambdaQueryWrapper.like(Batches::getBatchId, batchId.trim());
+        if (StringUtils.isNotBlank(batchInfoInput)) {
+            lambdaQueryWrapper.and(wrapper -> wrapper.like(Batches::getBatchId,  batchInfoInput.trim())
+                    .or()
+                    .like(Batches::getCardUid, batchInfoInput.trim()));
         }
         if (StringUtils.isNotBlank(batchType)) {
             lambdaQueryWrapper.eq(Batches::getBatchType, batchType.trim());
@@ -125,13 +133,56 @@ public class BatchesService {
         if (StringUtils.isNotBlank(batchStatus)) {
             lambdaQueryWrapper.eq(Batches::getBatchStatus, batchStatus.trim());
         }
-        if (StringUtils.isNotBlank(cardUid)) {
-            lambdaQueryWrapper.eq(Batches::getCardUid, cardUid.trim());
-        }
-        List<Batches> closedBatchesList = batchesMapper.selectList(lambdaQueryWrapper);
-        System.out.println("历史batch筛选:"+batchId+" "+batchType+" "+batchStatus+" "+cardUid);
-        return batchesAddDetails(closedBatchesList);
+        List<Batches> batchesList = batchesMapper.selectList(lambdaQueryWrapper);
+        System.out.println("历史批次筛选条件为:"+batchInfoInput+" "+batchType+" "+batchStatus);
+        return batchesAddDetails(batchesList);
     }
+
+    public List<Batches> getBatchesByUserId(int userId) {
+        List<Batches> userBatches = new ArrayList<>();
+        List<String> batchIds = batchesMapper.selectBatchIdsByUserId(String.valueOf(userId));
+        System.out.println("BatchesService --> 用户相关批次");
+        for (String batchId : batchIds) {
+            Batches batch = getBatchWithDetails(batchId);
+            if (batch != null) {
+                userBatches.add(batch);
+            }
+        }
+        return userBatches;
+    }
+
+    public List<Batches> getReqUserBatch(int userId, String batchInfoInput, String batchType, String batchStatus) {
+        LambdaQueryWrapper<Batches> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // 未关闭的批次
+        lambdaQueryWrapper.eq(Batches::getIsClosed, 0);
+        // 用户相关的批次（操作员或审核员）
+        lambdaQueryWrapper.and(wrapper ->
+                wrapper.eq(Batches::getOperatorId, userId)
+                        .or()
+                        .eq(Batches::getReviewerId, userId)
+        );
+        // 批次信息输入条件
+        if (StringUtils.isNotBlank(batchInfoInput)) {
+            lambdaQueryWrapper.and(wrapper ->
+                    wrapper.like(Batches::getBatchId, batchInfoInput.trim())
+                            .or()
+                            .like(Batches::getCardUid, batchInfoInput.trim())
+            );
+        }
+        // 批次类型条件
+        if (StringUtils.isNotBlank(batchType)) {
+            lambdaQueryWrapper.eq(Batches::getBatchType, batchType.trim());
+        }
+        // 批次状态条件
+        if (StringUtils.isNotBlank(batchStatus)) {
+            lambdaQueryWrapper.eq(Batches::getBatchStatus, batchStatus.trim());
+        }
+        System.out.println("用户批次筛选条件为: " + batchInfoInput + " " + batchType + " " + batchStatus);
+        List<Batches> batchesList = batchesMapper.selectList(lambdaQueryWrapper);
+        return batchesAddDetails(batchesList);
+    }
+
+
     //----------------------新增物资批次-------------------------------
     public int addBatch(Batches batch) {
         try{
@@ -171,6 +222,11 @@ public class BatchesService {
 
     public List<String> getOccupiedUids() {
         return batchesMapper.selectOccupiedUids();
+    }
+
+    public int closeBatch(String batchId) {
+        System.out.println("暂存区删除批次"+ batchId);
+        return batchesMapper.closeBatch(batchId);
     }
 
     //-------------------------关闭批次并更新物资数量------------------------------

@@ -16,7 +16,6 @@ public class Users {
     private int sex;
     private int role;
     private String phone;
-    private String isValid;
     private String avatar;
     @TableField(exist = false)
     private MultipartFile file;

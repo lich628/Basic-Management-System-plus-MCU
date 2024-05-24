@@ -9,7 +9,8 @@ import lombok.Data;
 public class io_Records {
     @TableId(type = IdType.AUTO)
     private int ioId;
-    private int batchId;
+    private String batchId;
+    private String type;
     private String Time;
     private int operatorId;
     private String operatorName;

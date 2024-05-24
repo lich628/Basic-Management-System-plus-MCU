@@ -204,7 +204,13 @@
 </template>
 
 <script>
-import {batchList, batchListSelect, updateBatch, getOccupiedUids, closeBatchByBatchId} from '@/api/batch'
+import {
+  batchList,
+  batchListSelect,
+  updateBatch,
+  getOccupiedUids,
+  closeBatchInfo
+} from '@/api/batch'
 import { selectNameAndAccountById} from "@/api/user";
 import {Message} from "element-ui";
 import { mapGetters } from "vuex";
@@ -317,12 +323,12 @@ export default {
       const batchType = batchTypeMap[this.batchTypeSelect];
       const batchStatus = batchStatusMap[this.batchStatusSelect];
       let messageContent = `搜索字段为: ${this.batchInfoInput} ${batchType} ${batchStatus}`;
-      if (!this.batchInfoInput && !this.batchTypeSelect && !this.batchStatusSelect) {
+      if (!this.batchInfoInput && !batchType && !batchStatus) {
         Message.error("查询内容为空 "+messageContent);
       } else {
         Message.success(messageContent);
       }
-      console.log(this.batchInfoInput, this.batchTypeSelect, this.batchStatusSelect)
+      console.log(this.batchInfoInput, batchType, batchStatus)
 
       batchListSelect(this.batchInfoInput, this.batchTypeSelect, this.batchStatusSelect).then(response => {
         const batches = response.data.batches;
@@ -422,20 +428,18 @@ export default {
     },
     delBatch(batch){
       if(this.role === 0 || this.userId === batch.operatorId || this.userId === batch.reviewerId) {
-        this.$confirm('确认移除该批次吗？')
+        this.$confirm('确认从暂存区移除该批次吗？')
           .then(_ => {
-            closeBatchByBatchId(batch.batchId).then((res) => {
+            closeBatchInfo(batch.batchId).then((res) => {
               this.$message({
                 message: "删除成功",
                 type: "success",
-              });
+              })
               this.getBatchList();
             }).catch((error) => {
               console.log(error);
             });
-            this.getBatchList();
           })
-          .catch(_ => {});
       } else {
         this.$message({
           message: "权限不足，非管理员或批次相关人员!",

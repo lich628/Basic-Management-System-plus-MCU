@@ -6,11 +6,50 @@ export function batchList() {
         method: 'get'
     })
 }
+
+export function historyList() {
+  return request({
+    url: '/batches/historyList',
+    method: 'get'
+  })
+}
+
 export function batchListSelect(batchInfoInput, batchType, batchStatus) {
   return request({
     url: '/batches/listLike',
     method: 'get',
     params: { batchInfoInput, batchType, batchStatus }
+  })
+}
+
+export function historyListSelect(batchInfoInput, batchType, batchStatus) {
+  return request({
+    url: '/batches/historyListLike',
+    method: 'get',
+    params: { batchInfoInput, batchType, batchStatus }
+  })
+}
+
+export function userBatch(userId) {
+  return request({
+    url: '/batches/userBatch',
+    method: 'get',
+    params: { userId }
+  })
+}
+
+export function userBatchSelect(userId,batchInfoInput, batchType, batchStatus) {
+  return request({
+    url: '/batches/userBatchListLike',
+    method: 'get',
+    params: { userId, batchInfoInput, batchType, batchStatus}
+  })
+}
+
+export function batchStatistics() {
+  return request({
+    url: '/batches/statistics',
+    method: 'get'
   })
 }
 
@@ -58,4 +97,13 @@ export function closeBatchByBatchId(batchId) {
     params: { batchId }
   })
 }
+
+export function closeBatchInfo(batchId) {
+  return request({
+    url: '/batches/closeBatchInfo',
+    method: 'put',
+    params: { batchId }
+  })
+}
+
 

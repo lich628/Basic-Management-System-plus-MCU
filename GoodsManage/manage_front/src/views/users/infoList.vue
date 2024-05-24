@@ -60,13 +60,23 @@
           <el-tag
             :type="scope.row.role === 0 ? 'danger' : (scope.row.role === 1 ? 'primary' : 'success')"
             disable-transitions>{{scope.row.role === 0 ? '管理员' : (scope.row.role === 1 ? '审核员' : '操作员')}}</el-tag>
+          <span v-if="scope.row.editing" style="margin-left: 5px">=></span>
+          <el-select v-if="scope.row.editing" v-model="scope.row.newRole" placeholder="选择角色" style="width: 87px; margin-left: 5px" size="small">
+            <el-option label="管理员" value= 0 ></el-option>
+            <el-option label="审核员" value= 1 ></el-option>
+            <el-option label="操作员" value= 2 ></el-option>
+            </el-select>
         </template>
       </el-table-column>
       <el-table-column prop="operation" label="操作">
         <template slot-scope="scope">
-          <div>
-          <el-button type="primary" size="mini" >查看编辑</el-button>
-          <el-button type="danger" size="mini" style="margin-left: 20px" @click="openDeleteConfirmDialog(scope.row.userId)">删除</el-button>
+          <div v-if="scope.row.editing">
+            <el-button type="success" size="mini" @click="saveRole(scope.row)">保存</el-button>
+            <el-button type="info" size="mini" @click="scope.row.editing = false">取消</el-button>
+          </div>
+          <div v-else>
+            <el-button type="primary" size="mini" @click="editRole(scope.row)">修改角色</el-button>
+            <el-button type="danger" size="mini" style="margin-left: 20px" @click="openDeleteConfirmDialog(scope.row.userId)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -99,15 +109,18 @@
 
 <script>
 
-import { userList, userListLike, deleteUserById } from "@/api/user";
+import {userList, userListLike, deleteUserById, update} from "@/api/user";
 import {mapGetters} from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(['role'])
+    ...mapGetters({
+      userRole: "role"
+    })
   },
   data() {
     return {
+      role:'',
       nameOrAccountInput: '',
       sex_value: '',
       role: '',
@@ -143,8 +156,11 @@ export default {
     fetchUserlist() {
       console.log("fetch data of users!");
       userList(this.pageNum, this.pageSize).then(res => {
-        console.log(res.data);
-        this.tableData = res.data.users.records
+        this.tableData = res.data.users.records.map(user => ({
+          ...user,
+          editing: false,
+          newRole: user.role
+        }));
         this.total = res.data.users.total
         this.pages = res.data.users.pages
       })
@@ -152,8 +168,11 @@ export default {
     userListLike() {
       console.log("fetch data of userListLike!");
       userListLike(this.nameOrAccountInput, this.sex_value, this.role, this.pageNum, this.pageSize).then(res => {
-        console.log(res.data);
-        this.tableData = res.data.users.records
+        this.tableData = res.data.users.records.map(user => ({
+          ...user,
+          editing: false,
+          newRole: user.role
+        }));
         this.total = res.data.users.total
         this.pages = res.data.users.pages
       })
@@ -165,7 +184,7 @@ export default {
       this.fetchUserlist()
     },
     openDeleteConfirmDialog(userId) {
-      if(this.role !== 0){
+      if(this.userRole !== 0){
         this.$message({
           message: "没有权限",
           type: "error",
@@ -175,6 +194,31 @@ export default {
       this.userIdToDelete = userId;
       this.deleteConfirmDialogVisible = true;
     },
+    editRole(row) {
+      if(this.userRole !== 0){
+        this.$message({
+          message: "没有权限",
+          type: "error",
+        });
+        return;
+      }
+      row.editing = true;
+    },
+     saveRole(row) {
+       let formData = new FormData();
+          formData.append("userId", row.userId)
+          formData.append("role", row.newRole)
+        update(formData).then(() => {
+          row.role = row.newRole;
+          row.editing = false;
+          this.fetchUserlist();
+          this.$message({
+            message: "角色更新成功",
+            type: "success",
+          });
+        })
+      },
+
     async deleteUser() {
       try {
         let userToDelete = { userId: this.userIdToDelete };

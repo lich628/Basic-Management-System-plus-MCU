@@ -41,4 +41,8 @@ public class SensorDataController {
         System.out.println("SensorDataController->stop--> 停止读取数据");
         sensorDataService.stopSerialPortReader();
     }
+    @PostMapping("/buzzer")
+    public void controlBuzzer(@RequestParam boolean turnOn) {
+        sensorDataService.controlBuzzer(turnOn);
+    }
 }

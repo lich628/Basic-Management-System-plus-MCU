@@ -1,16 +1,20 @@
 <template>
-  <div class="pie">
-    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-    <div id="pie1"></div>
-  </div>
+  <el-card class="box-card" style="width: 100%; height: 100%" :shadow="'always'">
+    <span style="font-family: 宋体,serif;font-size: 25px">物资情况</span>
+    <el-divider></el-divider>
+    <div class="container">
+      <div id="pie"></div>
+    </div>
+  </el-card>
 </template>
 
 <style>
-.pie{
-  height: 100vh;
+.container {
+  margin-top: -40px;
+  width: 100%;
+  height: 350px;
 }
-#pie1 {
-  float: left;
+#pie {
   width: 100%;
   height: 100%;
 }
@@ -30,6 +34,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 echarts.use([TitleComponent, TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
 export default {
+  name: "PieChart",
   created() {},
   mounted() {
     this.initData();
@@ -38,56 +43,14 @@ export default {
     //初始化数据
     initData() {
       // 基于准备好的dom，初始化echarts实例
-      var myChart = echarts.init(document.getElementById("pie1"));
+      var myChart = echarts.init(document.getElementById("pie"));
       // 绘制图表
       myChart.setOption({
-        title: {
-          text: "物资情况", //主标题
-          left: "3%",
-          top: "5%",
-          textStyle: {
-            //标题内容的样式
-            color: "#000",
-            fontStyle: "normal",
-            fontWeight: 10,
-            fontSize: 30, //主题文字字体大小，默认为18px
-          },
-        },
         stillShowZeroSum: true, //鼠标滑过出现数据
 
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b} : {c} ({d}%)",
-        },
-
-        label: {
-          show: false,
-          position: "center",
-        },
-
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: "40",
-            fontWeight: "bold",
-          },
-        },
-
-        labelLine: {
-          show: false,
-        },
-
-        legend: {
-          top: 80, //控制图例出现的距离  默认左上角
-          left: "center", //控制图例的位置
-          // itemWidth: 16,//图例颜色块的宽度和高度
-          // itemHeight: 12,
-          textStyle: {
-            //图例中文字的样式
-            color: "#000",
-            fontSize: 15,
-          },
-          //data: ["KN94口罩", "N95口罩", "防护服", "酒精消毒棉片", "防护眼罩"],
         },
 
         series: [
@@ -96,6 +59,25 @@ export default {
             type: "pie",
             radius: "70%",
             center: ["50%", "60%"], //饼状图出现的位置
+            label: {
+              show: true,
+              formatter: "{b}\n{d}%",
+              fontSize: 12,
+              fontWeight: 'normal',
+              position: 'outside'  // 标签位置在饼图外侧
+            },
+            labelLine: {
+              show: true,
+              length: 15,  // 第一段线的长度
+              length2: 10  // 第二段线的长度
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 16,
+                fontWeight: "bold",
+              },
+            },
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface BatchesMapper extends BaseMapper<Batches>{
@@ -30,9 +31,16 @@ public interface BatchesMapper extends BaseMapper<Batches>{
     @Select("select batch_id from batches where card_uid = #{cardUid} and is_closed = 0")
     String selectBatchIdByCardUid(String cardUid);
 
-    @Select("select batch_id from batches where operator_id = #{operatorId}")
-    List<String> selectBatchIdsByOperatorId(String operatorId);
+    @Select("SELECT batch_id FROM batches WHERE (operator_id = #{userId} OR reviewer_id = #{userId}) AND (is_closed = 0 OR is_closed IS NULL)")
+    List<String> selectBatchIdsByUserId(String userId);
 
     @Update("UPDATE batches SET is_closed = 1 WHERE batch_id = #{batchId}")
     int closeBatch(String batchId);
+
+    @Select("SELECT " +
+            "SUM(CASE WHEN IFNULL(batch_status, 0) = 0 AND is_closed = 0 THEN 1 ELSE 0 END) AS pendingReview, " +
+            "SUM(CASE WHEN IFNULL(batch_status, 0) = 1 AND batch_type = 'in' AND is_closed = 0 THEN 1 ELSE 0 END) AS pendingInStock, " +
+            "SUM(CASE WHEN IFNULL(batch_status, 0) = 1 AND batch_type = 'out' AND is_closed = 0 THEN 1 ELSE 0 END) AS pendingOutStock " +
+            "FROM batches")
+    Map<String, Integer> getBatchStatistics();
 }

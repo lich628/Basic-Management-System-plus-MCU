@@ -1,13 +1,14 @@
 package com.manage.controller;
 
 import com.manage.entity.Goods;
-import com.manage.entity.Users;
 import com.manage.service.GoodsService;
 import com.manage.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -32,6 +33,11 @@ public class GoodsController {
     @GetMapping("/list/type") // 查询所有物资类型
     public Result listType() {
         return Result.ok().data("goodsTypes", goodsService.goodsTypeList());
+    }
+
+    @GetMapping("/typeQuantity")
+    public Result getGoodsTypeAndQuantity() {
+        return Result.ok().data("goodsTypeAndQuantity", goodsService.getGoodsTypeAndQuantity());
     }
 
     @PostMapping("/list") //添加物资
@@ -96,7 +102,7 @@ public class GoodsController {
         return Result.ok().data("goods", goodsService.selectLowInventory());
     }
 
-    @GetMapping("/listAll")
+    @GetMapping("/listAll") //返回所有物资，不分页
     public Result listAll() {
         return Result.ok().data("goods", goodsService.goodsList());
     }

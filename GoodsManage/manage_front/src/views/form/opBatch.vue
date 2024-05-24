@@ -21,7 +21,7 @@
   <div class="batchInfo">
     <el-card class="data">
       <el-tag class="el-icon-s-flag" style="font-size: 13px;">批次UID : </el-tag>
-      <el-input v-model="scanedCardUid" style="width: 150px; margin-left: 10px" ></el-input>
+      <el-input v-model="scanedCardUid" style="width: 150px; margin-left: 10px" disabled></el-input>
       <el-tag class="el-icon-s-custom" style=" margin-left: 20px">提交者 : </el-tag>
       <el-input v-model="operatorName" style="width: 120px; margin-left: 10px" disabled></el-input>
       <el-tag class="el-icon-s-check" style="margin-left: 5px">审核者 : </el-tag>
@@ -107,7 +107,7 @@ export default {
           this.scanMessage = '请将卡片/标签放入感应区';
           this.messageStatus = 'warning';
         } else if(data.cardUid !== null){
-          this.scanedCardUid = data.cardUid.toString();
+          this.scanedCardUid = data.cardUid.toString().trim();
           this.read();
         }
       };
@@ -179,6 +179,7 @@ export default {
             time: currentTime,
             operatorId: this.userId,
             operatorName: this.userName,
+            type: this.batchType
           };
           console.log(io_records);
           addIORecords(io_records).then(res => {

@@ -24,3 +24,11 @@ export function deleteData(id) {
     method: 'delete',
   })
 }
+
+export function buzz(turnOn) {
+  return request({
+    url: `/data/buzzer`,
+    method: 'post',
+    params: {turnOn}
+  })
+}

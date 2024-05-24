@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UsersService {
@@ -72,6 +73,10 @@ public class UsersService {
         QueryWrapper<Users> wrapper = new QueryWrapper();
         wrapper.eq("user_account", userAccount);
         return usersMapper.selectOne(wrapper);
+    }
+
+    public List<Map<String, Object>> getUserCountsByRole() {
+        return usersMapper.getUserCountsByRole();
     }
 
     public Users selectById(int id) {

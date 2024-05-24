@@ -58,9 +58,13 @@
 <script>
 import {addSupplier, deleteSupplier, getSuppliers, updateSupplier} from "@/api/suppliers";
 import {Message} from "element-ui";
+import {mapGetters} from "vuex";
 
 export default {
   name: "suppliers",
+  computed: {
+    ...mapGetters(['role'])
+  },
   data(){
     return {
       suppliersData: [],
@@ -105,6 +109,11 @@ export default {
     addSupplier() {
       if (this.role !== 0) {
         Message.error('权限不足');
+        return ;
+      }
+      if (this.newSupplier.name == null || this.newSupplier.address == null
+        || this.newSupplier.contact == null || this.newSupplier.mark == null) {
+        Message.error('信息不能为空')
         return ;
       }
       addSupplier(this.newSupplier).then(() => {

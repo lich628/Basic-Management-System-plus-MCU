@@ -14,15 +14,45 @@ public class BatchesController {
     BatchesService batchesService;
 
     @GetMapping("/list")
-    public Result getAllActiveBatch() {
+    public Result getActiveBatch() {
         return Result.ok().data("batches", batchesService.getAllActiveBatch());
     }
 
     @GetMapping("/listLike") // 按名字模糊查询物资
-    public Result list(@RequestParam(required = false) String batchInfoInput,
+    public Result getReqBatches(@RequestParam(required = false) String batchInfoInput,
                        @RequestParam(required = false) String batchType,
                        @RequestParam(required = false) String batchStatus) {
-        return Result.ok().data("batches", batchesService.getAllReqBatch(batchInfoInput, batchType, batchStatus));
+        return Result.ok().data("batches", batchesService.getReqBatch(batchInfoInput, batchType, batchStatus));
+    }
+
+    @GetMapping("/historyList")
+    public Result getClosedBatches(){
+        return Result.ok().data("batches",batchesService.getClosedBatches());
+    }
+
+    @GetMapping("/historyListLike") // 按名字模糊查询物资
+    public Result getReqClosedBatches(@RequestParam(required = false) String batchInfoInput,
+                       @RequestParam(required = false) String batchType,
+                       @RequestParam(required = false) String batchStatus) {
+        return Result.ok().data("batches", batchesService.getReqClosedBatch(batchInfoInput,batchType,batchStatus));
+    }
+
+    @GetMapping("/userBatchListLike") // 按名字模糊查询物资
+    public Result getReqUserBatches(@RequestParam int userId,
+                                @RequestParam(required = false) String batchInfoInput,
+                                @RequestParam(required = false) String batchType,
+                                @RequestParam(required = false) String batchStatus) {
+        return Result.ok().data("batches", batchesService.getReqUserBatch(userId, batchInfoInput, batchType, batchStatus));
+    }
+
+    @GetMapping("/userBatch")
+    public Result getUserBatch(@RequestParam int userId) {
+        return Result.ok().data("batches",batchesService.getBatchesByUserId(userId));
+    }
+
+    @GetMapping("/statistics")
+    public Result getBatchStatistics() {
+        return Result.ok().data("batchStatistics",batchesService.getBatchStatistics());
     }
 
     @PostMapping("/list")
@@ -50,6 +80,16 @@ public class BatchesController {
             return Result.warn().msg("未找到对应批次");
         }
         return Result.ok().data("batches", batchesService.getBatchWithDetails(batchId));
+    }
+
+    @PutMapping("/closeBatchInfo")
+    public Result closeBatchInfo(@RequestParam String batchId) {
+        if (batchesService.closeBatch(batchId) == 1) {
+            return Result.ok().msg("删除成功");
+        }
+        else {
+            return Result.error().msg("删除失败");
+        }
     }
 
     @PutMapping("/closeBatch")

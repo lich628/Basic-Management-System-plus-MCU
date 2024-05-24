@@ -70,3 +70,17 @@ export function selectNameAndAccountById(userId) {
     method: 'get',
   })
 }
+
+export function userInfo(userId) {
+  return request({
+    url: `/users/info/${userId}`,
+    method: 'get',
+  })
+}
+
+export function userCounts() {
+  return request({
+    url: '/users/counts',
+    method: 'get',
+  })
+}
