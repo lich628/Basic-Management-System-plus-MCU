@@ -17,6 +17,7 @@
       </el-card>
       <el-card style="margin-left: 10px; width: 40%; height: 100%; border-radius: 20px">
         <span style="font-family: 宋体,serif;font-size: 20px">异常记录</span>
+        <el-tag v-if="warning" type="danger">出现异常!</el-tag>
         <el-divider></el-divider>
         <el-table :data="exceptionData" style="width: 100%; height: 500px;overflow: auto;">
           <el-table-column prop="temperature" label="温度" width="50px"></el-table-column>
@@ -70,6 +71,7 @@ export default {
 
       autoRec: true,
       exceptionData:[],
+      warning: false,
 
       setLimit : false
     };
@@ -144,12 +146,15 @@ export default {
         this.updateChartData();
 
         if (this.autoRec && this.isException(data)) {
+          this.warning = true;
           let dataWithTime = {...data, time: new Date().toLocaleString('zh-CN', { hour12: false })};
           this.addExceptionData(dataWithTime);
           buzz(true);
           setTimeout(() => {
             buzz(false);
           }, 2000);
+        } else{
+          this.warning = false;
         }
       }
     },
@@ -220,7 +225,7 @@ export default {
     },
     async addExceptionData(data) {
       addData(data);
-      this.getExceptionData();
+      await this.getExceptionData();
     },
     deleteData(index) {
       if (this.role >= 2) {

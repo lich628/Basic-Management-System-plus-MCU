@@ -20,7 +20,7 @@
             <div ref="smokeSensorChart" class="gauge-chart"></div>
             <el-tag v-if="temperature === 0 && humidity === 0 && smokeSensor === 0" type="warning">未连接</el-tag>
             <el-tag v-else-if="smokeSensor < thresholdSmokeSensor" type="success">正常</el-tag>
-            <el-tag v-if="smokeSensor > 300" type="danger">异常</el-tag>
+            <el-tag v-else-if="smokeSensor > thresholdSmokeSensor" type="danger">异常</el-tag>
           </div>
         </div>
       </el-col>
