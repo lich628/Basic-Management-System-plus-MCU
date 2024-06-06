@@ -1,5 +1,6 @@
 .idea/
 GoodsManage/manage_front/node_modules/
+GoodsManage/springboot_manage/target/
 *.log       # 忽略所有以.log结尾的文件
 .idea/      # 忽略.idea文件夹和其下的所有内容
 *.tmp       # 忽略所有以.tmp结尾的文件
