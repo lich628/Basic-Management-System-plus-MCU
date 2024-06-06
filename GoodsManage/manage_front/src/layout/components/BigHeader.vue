@@ -131,6 +131,7 @@ export default {
         confirmPassword: '',
         avatar: this.$store.state.user.avatar,
         file: "",
+        role: this.$store.state.user.role,
       },
 
       rules: {

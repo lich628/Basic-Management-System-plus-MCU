@@ -84,6 +84,7 @@ export default {
         formData.append("age", this.age)
         formData.append("sex", this.sex)
         formData.append("phone", this.phone)
+        formData.append("role", this.role)
       update(formData).then(() => {
         this.$message({
           message: "修改成功",
