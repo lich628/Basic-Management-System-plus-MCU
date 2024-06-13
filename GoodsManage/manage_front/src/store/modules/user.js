@@ -72,8 +72,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ userAccount: userAccount.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('SET_TOKEN', data.token) // vue设置token
+        setToken(data.token) // cookie设置token
         resolve()
       }).catch(error => {
         reject(error)

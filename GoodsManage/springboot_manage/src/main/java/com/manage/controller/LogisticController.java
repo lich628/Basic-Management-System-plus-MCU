@@ -1,9 +1,7 @@
 package com.manage.controller;
 
 import com.manage.entity.Logistics;
-import com.manage.entity.Orders;
 import com.manage.service.LogisticsService;
-import com.manage.service.OrdersService;
 import com.manage.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
